@@ -11,7 +11,7 @@ export default function AdminAuth() {
     const [email, setEmail] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [success, setSuccess] = useState<string | React.ReactNode>('');
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
