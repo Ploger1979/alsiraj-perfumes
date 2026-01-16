@@ -556,7 +556,8 @@ export default function AdminDashboard() {
                     <div
                         ref={tableContainerRef}
                         onScroll={() => handleScroll('table')}
-                        style={{ overflowX: 'auto' }}
+                        className="custom-scrollbar"
+                        style={{ overflowX: 'auto', paddingBottom: '5px' }}
                     >
                         <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ddd' }}>
                             <thead>
