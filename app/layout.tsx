@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import SearchModal from "@/components/SearchModal";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -65,6 +66,7 @@ export default function RootLayout({
             <Footer />
             <CartDrawer />
             <SearchModal />
+            <ScrollToTopButton />
           </CartProvider>
         </ThemeProvider>
       </body>
