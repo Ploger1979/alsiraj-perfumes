@@ -28,7 +28,18 @@ export default function AdminAuth() {
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    setSuccess('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.');
+                    if (data.debugLink) {
+                        setSuccess(
+                            <span>
+                                {data.message} <br />
+                                <a href={data.debugLink} style={{ color: 'blue', textDecoration: 'underline' }}>
+                                    اضغط هنا لاستعادة كلمة المرور (رابط مؤقت)
+                                </a>
+                            </span>
+                        );
+                    } else {
+                        setSuccess(data.message || 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.');
+                    }
                 } else {
                     setError(data.error);
                 }

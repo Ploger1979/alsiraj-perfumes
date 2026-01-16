@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 
@@ -14,6 +14,34 @@ export default function AdminDashboard() {
     const [productsList, setProductsList] = useState<any[]>([]);
 
     const [editingId, setEditingId] = useState<number | null>(null);
+
+    const tableContainerRef = useRef<HTMLDivElement>(null);
+    const topScrollRef = useRef<HTMLDivElement>(null);
+    const [tableWidth, setTableWidth] = useState(0);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (activeTab === 'list' && tableContainerRef.current) {
+                setTableWidth(tableContainerRef.current.scrollWidth);
+            }
+        };
+
+        // Initial check
+        updateWidth();
+        // Check after a small timeout to ensure rendering is complete
+        setTimeout(updateWidth, 100);
+
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [productsList, activeTab]);
+
+    const handleScroll = (source: 'top' | 'table') => {
+        if (source === 'top' && tableContainerRef.current && topScrollRef.current) {
+            tableContainerRef.current.scrollLeft = topScrollRef.current.scrollLeft;
+        } else if (source === 'table' && topScrollRef.current && tableContainerRef.current) {
+            topScrollRef.current.scrollLeft = tableContainerRef.current.scrollLeft;
+        }
+    };
 
     // الحالة لتخزين بيانات المنتج الجديد
     // State to hold new product data
@@ -152,6 +180,26 @@ export default function AdminDashboard() {
 
     return (
         <div className="container" style={{ paddingTop: '100px', paddingBottom: '50px', direction: 'rtl' }}>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .custom-scrollbar::-webkit-scrollbar {
+                    height: 12px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background-color: #d4af37;
+                    border-radius: 6px;
+                    border: 3px solid transparent;
+                    background-clip: content-box;
+                }
+                .custom-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: #d4af37 rgba(255,255,255,0.05);
+                }
+            `}} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h1>{editingId ? 'تعديل المنتج' : 'إضافة منتج جديد'}</h1>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -489,7 +537,27 @@ export default function AdminDashboard() {
             ) : activeTab === 'list' ? (
                 <div style={{ background: 'var(--card-bg)', padding: '1rem', borderRadius: '8px' }}>
                     <h2 style={{ marginBottom: '1rem' }}>المنتجات الحالية ({productsList.length})</h2>
-                    <div style={{ overflowX: 'auto' }}>
+
+                    {/* Top Scrollbar Restored */}
+                    <div
+                        ref={topScrollRef}
+                        onScroll={() => handleScroll('top')}
+                        className="custom-scrollbar"
+                        style={{
+                            overflowX: 'auto',
+                            overflowY: 'hidden',
+                            marginBottom: '10px',
+                            width: '100%',
+                            height: '20px' // Touch target height
+                        }}
+                    >
+                        <div style={{ width: tableWidth, height: '1px' }}></div>
+                    </div>
+                    <div
+                        ref={tableContainerRef}
+                        onScroll={() => handleScroll('table')}
+                        style={{ overflowX: 'auto' }}
+                    >
                         <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ddd' }}>
                             <thead>
                                 <tr style={{ background: '#f5f5f5', color: 'black' }}>

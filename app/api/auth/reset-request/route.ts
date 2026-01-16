@@ -1,7 +1,7 @@
-
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import nodemailer from 'nodemailer';
 
 const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
 
@@ -23,29 +23,65 @@ export async function POST(request: Request) {
         const user = users.find((u: any) => u.email === email);
 
         if (!user) {
-            // For security, we might want to return success even if email not found, 
-            // but for this internal tool, explicit error is better for UX.
             return NextResponse.json({ error: 'البريد الإلكتروني غير مسجل' }, { status: 404 });
         }
 
-        // Generate a reset token (simulation)
-        // In a real app, save this token to the user record with an expiration date
+        // Generate a reset token
         const resetToken = Math.random().toString(36).substring(2, 15);
 
-        // Simulate sending email
-        console.log('----------------------------------------------------');
-        console.log(`[SIMULATION] Sending Password Reset Email to: ${email}`);
-        console.log(`Link: http://${request.headers.get('host')}/admin/reset-password?token=${resetToken}&email=${email}`);
-        console.log('----------------------------------------------------');
+        // Construct the reset link
+        const host = request.headers.get('host');
+        const protocol = host?.includes('localhost') ? 'http' : 'https';
+        const resetLink = `${protocol}://${host}/admin/reset-password?token=${resetToken}&email=${email}`;
 
-        // Note to User: Since we don't have an SMTP server (like SendGrid or Gmail SMTP) configured,
-        // we are logging the link to the server console. 
-        // In production, use 'nodemailer' here.
+        // Attempt to send email
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            });
 
-        return NextResponse.json({
-            success: true,
-            message: 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني (تحقق من Console للمحاكاة)'
-        });
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'استعادة كلمة المرور - السراج للعطور',
+                html: `
+                    <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px;">
+                        <h2 style="color: #d4af37;">طلب استعادة كلمة المرور</h2>
+                        <p>مرحباً،</p>
+                        <p>لقد تلقينا طلباً لاستعادة كلمة المرور الخاصة بحسابك في السراج للعطور.</p>
+                        <p>اضغط على الرابط أدناه لتعيين كلمة مرور جديدة:</p>
+                        <a href="${resetLink}" style="display: inline-block; background-color: #d4af37; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">تغيير كلمة المرور</a>
+                        <p>أو انسخ الرابط التالي:</p>
+                        <p>${resetLink}</p>
+                        <p style="color: #666; font-size: 12px; margin-top: 30px;">إذا لم تطلب هذا التغيير، يرجى تجاهل هذه الرسالة.</p>
+                    </div>
+                `,
+            };
+
+            await transporter.sendMail(mailOptions);
+
+            return NextResponse.json({
+                success: true,
+                message: 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني بنجاح.'
+            });
+        } else {
+            console.log('----------------------------------------------------');
+            console.log(`[SIMULATION] Email Env vars missing. sending to: ${email}`);
+            console.log(`Link: ${resetLink}`);
+            console.log('----------------------------------------------------');
+
+            // IMPORTANT: For debugging/setup phase, we return the link in the message so it's visible in the UI alert if email fails.
+            // This is a temporary convenience for the user to get back in.
+            return NextResponse.json({
+                success: true,
+                message: 'لم يتم إعداد خدمة البريد الإلكتروني بعد. (راجع Console أو انسخ هذا الرابط مؤقتاً للتجربة)',
+                debugLink: resetLink
+            });
+        }
 
     } catch (error) {
         console.error('Reset Request Error:', error);
