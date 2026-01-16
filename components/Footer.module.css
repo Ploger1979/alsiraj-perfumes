@@ -1,0 +1,142 @@
+.footer {
+    position: relative;
+    margin-top: auto;
+    color: var(--footer-text);
+    /* Remove default background since we use wave and content bg */
+    background: transparent;
+}
+
+.waveContainer {
+    position: absolute;
+    top: -1px;
+    /* Overlap slightly to avoid gap */
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.content {
+    background-color: transparent;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.brand h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: var(--font-heading), serif;
+    color: var(--color-gold);
+    margin-bottom: 1rem;
+}
+
+.brand p {
+    color: var(--footer-text);
+    opacity: 0.8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.column h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--color-gold);
+    position: relative;
+    display: inline-block;
+}
+
+.column h4::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--color-gold);
+}
+
+.column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.column ul li {
+    margin-bottom: 0.8rem;
+}
+
+.column ul li a {
+    color: var(--footer-text);
+    opacity: 0.8;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.column ul li a:hover {
+    color: var(--color-gold);
+    opacity: 1;
+    transform: translateX(-5px);
+}
+
+.socials {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.socialIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--footer-text);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.socialIcon:hover {
+    background-color: var(--color-gold);
+    color: #0B1221;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.contactInfo {
+    font-size: 0.95rem;
+    color: var(--footer-text);
+    opacity: 0.8;
+}
+
+.copyright {
+    text-align: center;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    padding-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--footer-text);
+    opacity: 0.6;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    }
+}

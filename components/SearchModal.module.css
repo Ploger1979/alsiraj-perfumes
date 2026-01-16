@@ -1,0 +1,108 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 18, 33, 0.95);
+    /* Dark overlay */
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 0 1.5rem;
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    top: -50px;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.inputWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--color-gold);
+    color: var(--color-white);
+    outline: none;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.searchIcon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gold);
+}
+
+.results {
+    margin-top: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.resultItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.resultItem:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.resultImage {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.resultInfo {
+    flex: 1;
+}
+
+.resultName {
+    color: var(--color-white);
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.resultPrice {
+    color: var(--color-gold);
+}

@@ -1,0 +1,64 @@
+.bar {
+    background: var(--bg-gradient);
+    background-size: 400% 400%;
+    animation: navGradientAnimation 15s ease infinite;
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 80px;
+    /* Below Navbar */
+    z-index: 900;
+    transition: background 0.3s ease;
+}
+
+@keyframes navGradientAnimation {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.link {
+    padding: 0.5rem 2rem;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.link:hover {
+    background-color: var(--color-gold);
+    color: #0B1221;
+}
+
+.active {
+    background-color: var(--color-gold);
+    color: #0B1221;
+}
+
+@media (max-width: 768px) {
+    .link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
