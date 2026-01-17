@@ -5,7 +5,7 @@ import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
 
 export default function Hero() {
-  const featuredProducts = products.filter((p) => p.isFeatured);
+
 
   return (
     <div className={styles.container}>
@@ -29,7 +29,7 @@ export default function Hero() {
       <section className={`${styles.section} container`}>
         <h2 className={styles.sectionTitle}>مجموعات مميزة</h2>
         <div className={styles.grid}>
-          {featuredProducts.map((product) => (
+          {products.map((product) => (
             <div key={product.id} className="product-card">
               <div className="product-image-container">
                 <img
@@ -41,7 +41,7 @@ export default function Hero() {
               <div className="product-content">
                 <div>
                   <h3 className="product-title">{product.name}</h3>
-                  <p className="product-description">{product.description}</p>
+                  {/* <p className="product-description">{product.description}</p> */}
                 </div>
                 <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
                   <AddToCartButton product={product} />
