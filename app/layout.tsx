@@ -10,6 +10,7 @@ import CartDrawer from "@/components/CartDrawer";
 import SearchModal from "@/components/SearchModal";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 
+// تعريف الخطوط المستخدمة في الموقع (Google Fonts)
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
@@ -23,6 +24,7 @@ const lato = Lato({
   display: "swap",
 });
 
+// إعدادات الـ Metadata (العناوين والوصف الذي يظهر في محركات البحث ومواقع التواصل)
 export const metadata: Metadata = {
   metadataBase: new URL('https://alsiraj-perfumes.netlify.app'),
   title: "السراج للعطور | Alsiraj Lileutur",
@@ -34,10 +36,10 @@ export const metadata: Metadata = {
     siteName: "السراج للعطور",
     images: [
       {
-        url: "/logo-og.png",
-        width: 800,
-        height: 800,
-        alt: "السراج للعطور Logo",
+        url: "/og-image.png", // الصورة التي تظهر عند مشاركة الرابط (واتساب، فيسبوك، إلخ)
+        width: 1200,
+        height: 630,
+        alt: "السراج للعطور",
       },
     ],
     locale: "ar_IQ",
@@ -52,10 +54,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Lileutur",
     description: "اكتشف الفخامة مع السراج للعطور.",
-    images: ["/logo-og.png"],
+    images: ["/og-image.png"], // صورة المعاينة لتويتر
   },
 };
 
+// المخطط الرئيسي (Layout) الذي يحيط بكل صفحات الموقع
+// هنا نضع الأشياء الثابتة مثل الـ Navbar والـ Footer ومزودي الخدمات (Providers)
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -65,14 +69,15 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${playfair.variable} ${lato.variable} antialiased`}>
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
+          {/* مزود السلة يغلف التطبيق ليمكن الوصول للسلة من أي مكان */}
           <CartProvider>
-            <Navbar />
-            <CategoryBar />
-            <main style={{ minHeight: "100vh" }}>{children}</main>
-            <Footer />
-            <CartDrawer />
-            <SearchModal />
-            <ScrollToTopButton />
+            <Navbar /> {/* الشريط العلوي */}
+            <CategoryBar /> {/* شريط التصنيفات */}
+            <main style={{ minHeight: "100vh" }}>{children}</main> {/* محتوى الصفحة المتغير */}
+            <Footer /> {/* تذييل الصفحة */}
+            <CartDrawer /> {/* القائمة الجانبية للسلة (مخفية افتراضياً) */}
+            <SearchModal /> {/* نافذة البحث (مخفية افتراضياً) */}
+            <ScrollToTopButton /> {/* زر الصعود للأعلى */}
           </CartProvider>
         </ThemeProvider>
       </body>

@@ -10,12 +10,15 @@ import styles from "./Navbar.module.css";
 
 import { useCart } from "@/context/CartContext";
 
+// مكون الشريط العلوي (الناف بار)
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // حالة القائمة في الموبايل (مفتوحة/مغلقة)
+    const { theme, setTheme } = useTheme(); // التحكم في الوضع الليلي/النهاري
+    const [mounted, setMounted] = useState(false); // التأكد من تحميل الصفحة بالكامل لتجنب مشاكل العرض
+    // استخدام سلة التسوق: فتح السلة، فتح البحث، ومعرفة عدد العناصر
     const { setIsCartOpen, setIsSearchOpen, totalItems } = useCart();
 
+    // يتم تشغيله مرة واحدة عند بدء التطبيق للتأكد من جاهزية المتصفح
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -23,6 +26,7 @@ export default function Navbar() {
     return (
         <nav className={styles.nav}>
             <div className={styles.container}>
+                {/* الشعار: يتغير لونه حسب الوضع (فاتح/داكن) */}
                 <Link href="/" className={styles.logo}>
                     <Image
                         src="/logo-ohne-bg.png"
@@ -49,6 +53,7 @@ export default function Navbar() {
                 </div>
 
                 <div className={styles.icons}>
+                    {/* زر تبديل الوضع (شمش/قمر) */}
                     {mounted && (
                         <button
                             className={styles.iconButton}
@@ -63,6 +68,7 @@ export default function Navbar() {
                     >
                         <Search size={20} />
                     </button>
+                    {/* أيقونة السلة مع عداد المنتجات */}
                     <button
                         className={styles.cartIcon}
                         onClick={() => setIsCartOpen(true)}
@@ -78,6 +84,7 @@ export default function Navbar() {
                 </button>
             </div >
 
+            {/* القائمة المنسدلة للموبايل (تظهر وتختفي بتأثير حركي) */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div

@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./CategoryBar.module.css";
 
+// شريط التصنيفات الذي يظهر تحت الناف بار (فلترة المنتجات)
 export default function CategoryBar() {
-    const pathname = usePathname();
+    const pathname = usePathname(); // معرفة الصفحة الحالية لتمييز الزر النشط
 
+    // قائمة التصنيفات: الاسم والرابط
     const categories = [
         { name: "الكل", path: "/products" },
         { name: "Eau de Toilette", path: "/products/perfumes/eau-de-toilette" },

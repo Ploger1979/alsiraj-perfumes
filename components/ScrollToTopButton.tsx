@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
+// زر الصعود للأعلى (يظهر عند التمرير لأسفل الصفحة)
 export default function ScrollToTopButton() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        // مراقبة التمرير: إظهار الزر إذا نزلنا أكثر من 300 بكسل
         const toggleVisibility = () => {
             if (window.scrollY > 300) {
                 setIsVisible(true);
@@ -19,6 +21,7 @@ export default function ScrollToTopButton() {
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 
+    // دالة الصعود للأعلى بسلاسة
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,

@@ -8,10 +8,12 @@ import { products } from "@/data/products";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/format";
 
+// نافذة البحث عن المنتجات
 export default function SearchModal() {
+    // نستخدم السياق (Context) لمعرفة ما إذا كانت نافذة البحث مفتوحة أم لا
     const { isSearchOpen, setIsSearchOpen } = useCart();
-    const [query, setQuery] = useState("");
-    const inputRef = useRef<HTMLInputElement>(null);
+    const [query, setQuery] = useState(""); // النص الذي يكتبه المستخدم للبحث
+    const inputRef = useRef<HTMLInputElement>(null); // مرجع لحقل الإدخال للتركيز عليه تلقائياً
 
     useEffect(() => {
         if (isSearchOpen && inputRef.current) {
@@ -19,6 +21,7 @@ export default function SearchModal() {
         }
     }, [isSearchOpen]);
 
+    // تصفية المنتجات بناءً على نص البحث (الاسم أو الوصف)
     const filteredProducts = query
         ? products.filter((p) =>
             p.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -47,6 +50,7 @@ export default function SearchModal() {
                     />
                 </div>
 
+                {/* نتائج البحث */}
                 <div className={styles.results}>
                     {filteredProducts.map((product) => (
                         <Link

@@ -7,19 +7,22 @@ interface PageProps {
     params: Promise<{ id: string }>;
 }
 
+// دالة لتوليد صفحات المنتجات تلقائياً (SSG) لتحسين الأداء
 export async function generateStaticParams() {
     return products.map((product) => ({
         id: product.id.toString(),
     }));
 }
 
+// صفحة المنتج الفردية (Dynamic Route)
+// تستقبل الـ id من الرابط وتعرض تفاصيل المنتج
 export default async function ProductPage({ params }: PageProps) {
     const resolvedParams = await params;
     const productId = parseInt(resolvedParams.id);
     const product = products.find((p) => p.id === productId);
 
     if (!product) {
-        notFound();
+        notFound(); // إذا لم يوجد المنتج، اعرض صفحة 404
     }
 
     return <ProductDetails product={product} />;

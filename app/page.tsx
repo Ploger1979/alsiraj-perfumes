@@ -4,12 +4,14 @@ import { products } from "@/data/products";
 import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
 
+// المكون الرئيسي للصفحة الرئيسية (Hero Section)
 export default function Hero() {
 
 
   return (
     <div className={styles.container}>
       {/* Hero Section */}
+      {/* القسم الترحيبي (Hero Section): أول ما يراه الزائر */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>السراج للعطور</h1>
@@ -26,6 +28,7 @@ export default function Hero() {
       </section>
 
       {/* Featured Products */}
+      {/* قسم المنتجات المميزة: يعرض قائمة بجميع المنتجات (أو المميزة فقط إذا قمنا بفلترتها) */}
       <section className={`${styles.section} container`}>
         <h2 className={styles.sectionTitle}>مجموعات مميزة</h2>
         <div className={styles.grid}>
@@ -54,6 +57,7 @@ export default function Hero() {
       </section>
 
       {/* Special Offer */}
+      {/* قسم العروض الخاصة (CTA): لجذب الانتباه لعروض معينة */}
       <section className={styles.ctaSection}>
         <div className="container">
           <h2 className={styles.sectionTitle}>عرض حصري</h2>

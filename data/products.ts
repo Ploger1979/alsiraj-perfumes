@@ -221,7 +221,11 @@ export const products: Product[] = [
         "gender": "رجالي",
         "concentration": "Eau de Parfum",
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 101,
@@ -238,7 +242,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["تبغ", "عسل أبيض", "فانيليا", "كاكاو", "باتشولي", "عنبر"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 102,
@@ -256,7 +264,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["زعفران", "ياسمين", "خشب العنبر", "عنبر الحوت", "راتنج التنوب", "خشب الأرز"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 103,
@@ -274,7 +286,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["فلفل أسود", "فلفل أبيض", "برغموت", "مريمية", "أخشاب الأرز", "تونكا", "كاكاو", "خشب العنبر"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 104,
@@ -292,7 +308,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["توابل", "روم", "تبغ", "جلود", "سوسن", "توبروز", "خشب الغاياك", "تونكا"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
     {
@@ -311,7 +331,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["أناناس", "برغموت", "كشمش أسود", "بتولا", "باتشولي", "ياسمين", "مسك", "طحلب البلوط", "فانيليا", "عنبر"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 107,
@@ -329,7 +353,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["خشب الصندل", "قرفة", "كزبرة", "توت العرعر", "لافندر", "زنجبيل", "تونكا", "فانيليا"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 108,
@@ -345,7 +373,11 @@ export const products: Product[] = [
         "gender": "رجالي",
         "concentration": "Eau de Parfum",
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 109,
@@ -362,7 +394,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["يانسون", "جريب فروت", "توت العليق", "لافندر", "أخشاب", "هيل"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 110,
@@ -380,7 +416,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["ليمون أمالفي", "يوسفي", "بنفسج", "أخشاب الأرز", "كزبرة", "جلد", "عنبر", "لابدانوم"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 111,
@@ -398,7 +438,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["برتقال أحمر", "يوسفي", "ورد غراس", "ورد دمشقي", "زنبق الوادي", "باتشولي"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
     {
@@ -417,7 +461,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["خوخ", "ليتشي", "يوسفي", "زنبق", "ياسمين", "برقوق", "فانيليا", "عنبر", "مسك"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 114,
@@ -434,7 +482,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["فلفل وردي", "عرعر", "بنفسج", "توفي", "قرفة", "مريمية", "فانيليا", "تونكا", "عنبر"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 115,
@@ -450,7 +502,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["كستناء", "توابل", "إليمي", "مريمية", "لافندر", "جلود", "فانيليا", "عود", "خشب الغاياك"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 116,
@@ -467,7 +523,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["برغموت", "ليمون", "يانسون نجمي", "زهر الزيتون", "خشب الغاياك", "جلود", "تبغ", "تونكا"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
 
@@ -486,7 +546,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["تفاح أخضر", "نعناع", "لافندر", "جريب فروت", "مريمية", "إبرة الراعي", "صنوبر", "باتشولي", "طحلب"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 121,
@@ -502,7 +566,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["نسيم البحر", "ملح البحر", "جريب فروت", "ورق الغار", "إبرة الراعي", "توادر", "عنبر أحمر", "خشب الغاياك"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 122,
@@ -520,7 +588,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["جريب فروت", "نسيم البحر", "يوسفي", "ورق الغار", "ياسمين", "خشب الغاياك", "طحلب البلوط", "باتشولي"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 123,
@@ -538,7 +610,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["زهر البرتقال", "يوسفي", "برغموت", "ليمون", "قرفة", "هيل", "ياسمين", "فانيليا", "تونكا", "خشب الصندل", "باتشولي"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 125,
@@ -555,7 +631,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["برغموت", "يوسفي", "ورد غراس", "ياسمين", "خشب الصندل", "أرز", "مسك أبيض", "باتشولي"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 126,
@@ -573,7 +653,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["توت العرعر", "حمضيات", "برتقال أحمر", "ليمون صقلي", "فلفل حار", "لافندر", "مريمية", "نجيل الهند", "أرز"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 127,
@@ -590,7 +674,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["ثمار العاطفة", "خوخ", "توت العليق", "كمثرى", "زنبق الوادي", "مسك", "صندل", "فانيليا", "هيلوتروب"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 128,
@@ -607,7 +695,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["جريب فروت", "برغموت", "نسيم البحر", "كشميران", "أخشاب عنبرية"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 129,
@@ -625,7 +717,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["فواكه", "ملح البحر", "ليمون صقلي", "برغموت", "سوسن", "مسك", "خشب الصندل"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 130,
@@ -641,7 +737,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["بازلاء حلوة", "برغموت", "إبرة الراعي", "سفرجل", "فريسيا", "ورد دمشقي", "باتشولي"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 131,
@@ -658,7 +758,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["يوسفي", "نعناع", "قرفة", "ورد", "عنبر", "جلد", "أخشاب"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 132,
@@ -675,7 +779,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["مريمية", "ليمون", "تولو بلسم", "هيل أسود", "قرفة", "برالين", "باتشولي", "عنبر أسود"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 133,
@@ -691,7 +799,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["برقوق", "مشمش", "ملح البحر", "فانيليا", "عنبر", "رمل", "تونكا"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 134,
@@ -709,7 +821,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["يلانج يلانج", "فشار", "فانيليا", "خشب الصندل", "بذور الأمبريت", "زهر البرتقال", "خوخ", "عنبر"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 135,
@@ -727,7 +843,11 @@ export const products: Product[] = [
         "concentration": "Eau de Toilette",
         "notes": ["زنجبيل", "نسغ أخضر", "زعتر", "فانيليا", "قرفة", "جلود", "مشروب كحولي", "أرز", "المر", "سكر"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 136,
@@ -742,7 +862,11 @@ export const products: Product[] = [
         "gender": "للجنسين",
         "concentration": "Diffuser",
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
     {
@@ -760,7 +884,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["كشمش أسود", "ورد تركي", "دافانا", "باتشولي", "بنزوين"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 139,
@@ -776,7 +904,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["كمثرى", "كشمش أسود", "فلفل وردي", "جريب فروت", "أناناس", "ورد", "ياسمين", "فانيليا", "أرز"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 140,
@@ -794,7 +926,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["ترفل", "جاردينيا", "كشمش أسود", "يلانج يلانج", "برغموت", "أوركيد أسود", "توابل", "فواكه", "باتشولي", "بخور", "شوكولاتة"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 141,
@@ -812,7 +948,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["عود", "حشيشة الملاك", "سرو", "زنجبيل", "عرعر", "castoreum"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 142,
@@ -830,7 +970,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["يوزو", "ليمون", "فواكه مائية", "زهر البرتقال", "شاي الياسمين", "لوتس", "خشب الصندل", "باتشولي", "فانيليا"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
     {
@@ -848,7 +992,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["ثمار العاطفة", "جريب فروت", "أناناس", "يوسفي", "فراولة", "فاوانيا", "أوركيد", "ياسمين", "مسك"],
         "isFeatured": true,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
     {
         "id": 146,
@@ -866,7 +1014,11 @@ export const products: Product[] = [
         "concentration": "Eau de Parfum",
         "notes": ["كشمش أسود", "حمضيات", "فلفل وردي", "أوركيد", "سوسن", "باتشولي", "خشب الصندل"],
         "isFeatured": false,
-        "isOffer": false
+        "isOffer": false,
+        sizes: [
+            { size: "50 مل", price: 150000 },
+            { size: "100 مل", price: 200000 }
+        ]
     },
 
     {
@@ -880,7 +1032,11 @@ export const products: Product[] = [
         gender: "رجالي",
         concentration: "Eau de Parfum",
         isFeatured: true,
-        isOffer: false
+        isOffer: false,
+        sizes: [
+            { size: "50 مل", price: 1499999 },
+            { size: "100 مل", price: 1549999 }
+        ]
     },
 
     {
@@ -894,7 +1050,11 @@ export const products: Product[] = [
         gender: "رجالي",
         concentration: "Eau de Parfum",
         isFeatured: true,
-        isOffer: false
+        isOffer: false,
+        sizes: [
+            { size: "50 مل", price: 1500000 },
+            { size: "100 مل", price: 1550000 }
+        ]
     },
     
     
@@ -909,7 +1069,7 @@ export const products: Product[] = [
         category: "men",
         gender: "رجالي",
         concentration: "Eau de Parfum",
-        size: "100ml",
+        size: "100 مل",
         isFeatured: false,
         isOffer: true
     },];

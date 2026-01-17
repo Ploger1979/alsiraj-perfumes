@@ -1,3 +1,4 @@
+// صفحة "تواصل معنا"
 export default function ContactPage() {
   return (
     <div className="container" style={{ padding: "4rem 1.5rem" }}>
@@ -17,6 +18,7 @@ export default function ContactPage() {
           gap: "4rem",
         }}
       >
+        {/* معلومات الاتصال (يسار الشاشة في الشاشات الكبيرة) */}
         <div>
           <h2 style={{ marginBottom: "1.5rem" }}>ابقى على تواصل</h2>
           <p style={{ marginBottom: "1rem", color: "var(--color-text-muted)" }}>
@@ -36,6 +38,7 @@ export default function ContactPage() {
           </div>
         </div>
 
+        {/* نموذج الاتصال (الاسم، البريد، الرسالة) */}
         <form
           style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >

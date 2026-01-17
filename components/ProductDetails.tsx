@@ -11,14 +11,23 @@ interface ProductDetailsProps {
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
+    // إدارة عربة التسوق: نستخدم هذا الخطاف للوصول إلى وظائف السلة
     const { addToCart } = useCart();
+
+    // حالة الحجم المختار: نبدأ بأول حجم متاح إذا وجد، وإلا نتركه فارغاً
     const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
         product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined
     );
+
+    // حالة الصورة المختارة: نبدأ بالصورة الرئيسية للمنتج
     const [selectedImage, setSelectedImage] = useState<string>(product.image);
+
+    // حالة نوع التوصيل: الافتراضي داخل بغداد
     const [deliveryType, setDeliveryType] = useState<'baghdad' | 'provinces'>('baghdad');
 
+    // دالة إضافة المنتج للسلة
     const handleAddToCart = () => {
+        // تجهيز كائن المنتج للإضافة مع السعر والحجم المختارين
         const productToAdd = {
             ...product,
             price: selectedSize ? selectedSize.price : product.price,
@@ -29,6 +38,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         addToCart(productToAdd);
     };
 
+    // حساب السعر الحالي بناءً على الحجم المختار
     const currentPrice = selectedSize ? selectedSize.price : product.price;
     const currentOriginalPrice = selectedSize ? selectedSize.originalPrice : product.originalPrice;
 
@@ -138,10 +148,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             </select>
                         </div>
 
+                        {/* زر الإضافة للسلة */}
                         <button onClick={handleAddToCart} className={styles.addToCartBtn}>
                             أضف إلى السلة
                         </button>
 
+                        {/* زر الطلب عبر الواتساب */}
                         <button
                             onClick={() => {
                                 const price = selectedSize ? selectedSize.price : product.price;

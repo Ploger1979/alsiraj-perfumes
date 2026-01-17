@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Facebook, Instagram } from "lucide-react";
 import styles from "./Footer.module.css";
 
+// مكون تذييل الصفحة (فوتر) الذي يظهر في أسفل كل الصفحات
 export default function Footer() {
     return (
         <footer className={styles.footer}>
@@ -64,6 +65,7 @@ export default function Footer() {
                         </div>
                     </div>
 
+                    {/* حقوق النشر */}
                     <div className={styles.copyright}>
                         <p>
                             &copy; {new Date().getFullYear()} السراج للعطور. جميع الحقوق محفوظة.

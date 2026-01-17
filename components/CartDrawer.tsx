@@ -6,13 +6,15 @@ import styles from "./CartDrawer.module.css";
 import { X, Minus, Plus, Trash2 } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 
+// مكون القائمة الجانبية للسلة
 export default function CartDrawer() {
+    // جلب بيانات ووظائف السلة من المزود (Context)
     const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, totalPrice } = useCart();
 
-    // Delivery Logic
+    // منطق حساب التوصيل
     const [deliveryType, setDeliveryType] = useState<'baghdad' | 'provinces'>('baghdad');
-    const deliveryCost = deliveryType === 'baghdad' ? 5000 : 8000;
-    const finalTotal = totalPrice + deliveryCost;
+    const deliveryCost = deliveryType === 'baghdad' ? 5000 : 8000; // تكلفة التوصيل حسب الموقع
+    const finalTotal = totalPrice + deliveryCost; // السعر النهائي مع التوصيل
 
     if (!isCartOpen) return null;
 
@@ -22,6 +24,7 @@ export default function CartDrawer() {
                 className={`${styles.overlay} ${isCartOpen ? styles.open : ""}`}
                 onClick={() => setIsCartOpen(false)}
             />
+            {/* القائمة الجانبية نفسها */}
             <div className={`${styles.drawer} ${isCartOpen ? styles.open : ""}`}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>سلة المشتريات</h2>
@@ -97,6 +100,7 @@ export default function CartDrawer() {
                             <span>{formatCurrency(finalTotal)}</span>
                         </div>
 
+                        {/* زر إتمام الشراء: يقوم بتجهيز رسالة واتساب مفصلة بالطلب */}
                         <button
                             className={styles.checkoutBtn}
                             onClick={() => {

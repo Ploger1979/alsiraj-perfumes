@@ -3,7 +3,9 @@ import { products } from "@/data/products";
 import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
 
+// صفحة العروض الخاصة (تظهر المنتجات التي عليها خصم فقط)
 export default function OffersPage() {
+    // تصفية المنتجات لجلب التي عليها عرض (isOffer = true)
     const offers = products.filter((p) => p.isOffer);
 
     return (
@@ -17,6 +19,7 @@ export default function OffersPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
                 {offers.map((item) => (
                     <div key={item.id} className="product-card">
+                        {/* شارة الخصم (تحسب النسبة المئوية تلقائياً) */}
                         <div className="product-badge">
                             {item.originalPrice && item.price ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0}%
                         </div>
@@ -30,6 +33,7 @@ export default function OffersPage() {
                         <div className="product-content">
                             <div>
                                 <h3 className="product-title">{item.name}</h3>
+                                {/* السعر بعد الخصم والسعر الأصلي */}
                                 <div className="product-price">
                                     {item.price.toLocaleString()} د.ع
                                     {item.originalPrice && (
