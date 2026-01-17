@@ -24,6 +24,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://alsiraj-perfumes.netlify.app'),
   title: "السراج للعطور | Alsiraj Lileutur",
   description: "اكتشف الفخامة مع السراج للعطور. عطور وزيوت فرنسية فاخرة.",
   openGraph: {
