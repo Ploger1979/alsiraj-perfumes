@@ -29,24 +29,29 @@ export const metadata: Metadata = {
   openGraph: {
     title: "السراج للعطور | Alsiraj Lileutur",
     description: "اكتشف الفخامة مع السراج للعطور. عطور وزيوت فرنسية فاخرة.",
-    url: "https://alsiraj-perfumes.netlify.app", // Placeholder, will update if known
+    url: "https://alsiraj-perfumes.netlify.app",
     siteName: "السراج للعطور",
     images: [
       {
-        url: "/logo-ohne-bg.png", // Assuming this image exists in public folder
+        url: "/logo-og.png",
         width: 800,
-        height: 600,
+        height: 800,
         alt: "السراج للعطور Logo",
       },
     ],
     locale: "ar_IQ",
     type: "website",
   },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
   twitter: {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Lileutur",
     description: "اكتشف الفخامة مع السراج للعطور.",
-    images: ["/logo-ohne-bg.png"],
+    images: ["/logo-og.png"],
   },
 };
 
