@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "السراج للعطور",
     images: [
       {
-        url: "/og-image.png", // الصورة التي تظهر عند مشاركة الرابط (واتساب، فيسبوك، إلخ)
+        url: "/alsiraj-cover.png", // الصورة التي تظهر عند مشاركة الرابط (واتساب، فيسبوك، إلخ)
         width: 1200,
         height: 630,
         alt: "السراج للعطور",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Lileutur",
     description: "اكتشف الفخامة مع السراج للعطور.",
-    images: ["/og-image.png"], // صورة المعاينة لتويتر
+    images: ["/alsiraj-cover.png"], // صورة المعاينة لتويتر
   },
 };
 
