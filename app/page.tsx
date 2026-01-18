@@ -46,7 +46,7 @@ export default function Hero() {
                   <h3 className="product-title">{product.name}</h3>
                   {/* <p className="product-description">{product.description}</p> */}
                 </div>
-                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem', justifyContent: 'center' }}>
                   <AddToCartButton product={product} />
                   <Link href={`/products/${product.id}`} className="btn">عرض التفاصيل</Link>
                 </div>

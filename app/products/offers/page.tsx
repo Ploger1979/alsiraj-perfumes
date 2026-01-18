@@ -41,7 +41,7 @@ export default function OffersPage() {
                                     )}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem', justifyContent: 'center' }}>
                                 <AddToCartButton product={item} />
                                 <Link href={`/products/${item.id}`} className="btn">عرض التفاصيل</Link>
                             </div>
