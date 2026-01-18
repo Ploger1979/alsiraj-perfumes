@@ -43,9 +43,9 @@ export default function Footer() {
                         <div className={styles.column}>
                             <h4>تواصل معنا</h4>
                             <div className={styles.socials}>
-                                <a href="#" className={styles.socialIcon}><Instagram size={20} /></a>
-                                <a href="https://www.facebook.com/profile.php?id=100066571796739" className={styles.socialIcon}><Facebook size={20} /></a>
-                                <a href="#" className={styles.socialIcon}>
+                                <a href="https://www.instagram.com/alsiraj_perfumes" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><Instagram size={20} /></a>
+                                <a href="https://www.facebook.com/profile.php?id=100066571796739" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><Facebook size={20} /></a>
+                                <a href="https://www.tiktok.com/@alsiraj_perfumes" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="20"
