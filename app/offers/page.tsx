@@ -1,7 +1,6 @@
 
 import { products } from '../../data/products';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -15,7 +14,7 @@ export default function OffersPage() {
 
     return (
         <>
-            <Navbar />
+
             <main className="container" style={{ paddingTop: '100px', paddingBottom: '50px', minHeight: '80vh' }}>
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--color-gold)' }}>العروض الخاصة 🔥</h1>
@@ -86,7 +85,7 @@ export default function OffersPage() {
                     </div>
                 )}
             </main>
-            <Footer />
+
         </>
     );
 }
