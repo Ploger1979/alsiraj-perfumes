@@ -14,8 +14,8 @@ export default async function OffersPage() {
         allProducts = staticProducts as any;
     }
 
-    // تصفية المنتجات لجلب التي عليها عرض حقيقي (isOffer = true AND has originalPrice)
-    const offers = allProducts.filter((p: any) => p.isOffer && p.originalPrice && p.originalPrice > 0);
+    // تصفية المنتجات لجلب التي عليها عرض (isOffer = true)
+    const offers = allProducts.filter((p: any) => p.isOffer);
 
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
