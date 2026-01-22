@@ -1,6 +1,7 @@
 
-import { products } from '../../data/products';
-
+import { products as staticProducts } from '../../data/products';
+import dbConnect from '@/lib/mongodb';
+import Product from '@/models/Product';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,8 +10,17 @@ export const metadata = {
     description: 'تصفح أفضل العروض والخصومات على العطور العالمية في العراق.',
 };
 
-export default function OffersPage() {
-    const offerProducts = products.filter(p => p.isOffer);
+export const dynamic = 'force-dynamic';
+
+export default async function OffersPage() {
+    await dbConnect();
+    let allProducts = await Product.find({}).lean();
+    if (!allProducts || allProducts.length === 0) {
+        allProducts = staticProducts as any;
+    }
+
+    // تصفية المنتجات لجلب التي عليها عرض حقيقي (isOffer = true AND has originalPrice)
+    const offerProducts = allProducts.filter((p: any) => p.isOffer && p.originalPrice && p.originalPrice > 0);
 
     return (
         <>
@@ -30,7 +40,7 @@ export default function OffersPage() {
                     </div>
                 ) : (
                     <div className="products-grid">
-                        {offerProducts.map(product => (
+                        {offerProducts.map((product: any) => (
                             <div key={product.id} className="product-card" style={{ position: 'relative' }}>
                                 {/* شارة الخصم */}
                                 <div style={{

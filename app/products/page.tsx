@@ -7,6 +7,8 @@ import AddToCartButton from "@/components/AddToCartButton";
 import dbConnect from "@/lib/mongodb";
 import Product from "@/models/Product";
 
+export const dynamic = 'force-dynamic';
+
 // صفحة عرض جميع المنتجات (كتالوج المنتجات)
 export default async function ProductsPage() {
     await dbConnect();

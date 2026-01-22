@@ -5,6 +5,8 @@ import AddToCartButton from "@/components/AddToCartButton";
 import dbConnect from "@/lib/mongodb";
 import Product from "@/models/Product";
 
+export const dynamic = 'force-dynamic';
+
 // صفحة العروض الخاصة (تظهر المنتجات التي عليها خصم فقط)
 export default async function OffersPage() {
     await dbConnect();

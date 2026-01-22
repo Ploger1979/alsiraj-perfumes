@@ -7,6 +7,8 @@ import dbConnect from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { products as staticProducts } from "@/data/products"; // Fallback
 
+export const dynamic = 'force-dynamic';
+
 // المكون الرئيسي للصفحة الرئيسية (Hero Section)
 export default async function Hero() {
   await dbConnect();
