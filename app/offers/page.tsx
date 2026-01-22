@@ -17,7 +17,7 @@ export default async function OffersPage() {
         allProducts = staticProducts as any;
     }
 
-    const offerProducts = allProducts.filter((p: any) => p.isOffer);
+    const offerProducts = allProducts.filter((p: any) => p.isOffer && p.originalPrice && p.originalPrice > 0);
 
     return (
         <>
