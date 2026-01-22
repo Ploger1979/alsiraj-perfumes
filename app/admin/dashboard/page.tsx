@@ -243,6 +243,13 @@ export default function AdminDashboard() {
                 >
                     نظام الفواتير 📄
                 </button>
+                <button
+                    onClick={() => router.push('/admin/users')}
+                    className="btn"
+                    style={{ borderColor: 'var(--color-gold)', color: 'var(--color-gold)' }}
+                >
+                    إدارة المشرفين 🛡️
+                </button>
             </div>
 
             {message && (
