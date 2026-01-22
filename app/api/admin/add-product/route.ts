@@ -8,14 +8,32 @@ export async function POST(request: Request) {
         await dbConnect();
 
         const body = await request.json();
+        const { ...data } = body;
 
-        // Generate a new ID (timestamp based to match current pattern, or could use auto-increment if strictly needed)
-        // Using timestamp is safe enough for low volume.
-        const newProduct = new Product({
-            id: Date.now(),
-            ...body
-        });
+        // Prepare the object
+        const productData: any = {
+            id: Date.now(), // Generate ID
+            name: data.name,
+            description: data.description,
+            image: data.image,
+            images: data.images,
+            category: data.category,
+            gender: data.gender,
+            concentration: data.concentration,
+            size: data.size,
+            isFeatured: data.isFeatured,
+            isOffer: data.isOffer || false,
+        };
 
+        if (data.isOffer) {
+            productData.price = Number(data.salePrice);
+            productData.originalPrice = Number(data.price);
+        } else {
+            productData.price = Number(data.price);
+            // No originalPrice
+        }
+
+        const newProduct = new Product(productData);
         await newProduct.save();
 
         return NextResponse.json({ success: true, message: 'تم إضافة المنتج بنجاح', product: newProduct });
