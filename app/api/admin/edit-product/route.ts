@@ -33,12 +33,11 @@ export async function POST(request: Request) {
             updateData.originalPrice = Number(data.price);
         } else {
             updateData.price = Number(data.price);
-            // Explicitly set originalPrice to null/undefined to ensure it fails the "exists" check
-            updateData.originalPrice = null;
-            updateData.$unset = { originalPrice: 1 };
+            // Instead of unsetting or null, set it to 0. 
+            // Our frontend filter checks for originalPrice > 0, so this safely hides it.
+            updateData.originalPrice = 0;
         }
 
-        // Use findOneAndUpdate with overwrite/set options carefully
         const product = await Product.findOneAndUpdate(
             { id: id },
             updateData,
