@@ -1,12 +1,21 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
+import dbConnect from "@/lib/mongodb";
+import Product from "@/models/Product";
 
 // صفحة عرض جميع المنتجات (كتالوج المنتجات)
-export default function ProductsPage() {
+export default async function ProductsPage() {
+    await dbConnect();
+    let products = await Product.find({}).sort({ createdAt: -1 }).lean();
+
+    if (!products || products.length === 0) {
+        products = staticProducts as any;
+    }
+
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
             <br />
@@ -17,24 +26,22 @@ export default function ProductsPage() {
 
             {/* شبكة المنتجات (Grid): تعرض المنتجات في صفوف وأعمدة متجاوبة */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
-                {products.map((item) => (
+                {products.map((item: any) => (
                     <div key={item.id} className="product-card">
                         <div className="product-image-container">
-                            <Image
+                            <img
                                 src={item.image}
                                 alt={item.name}
-                                fill
                                 className="product-image" // صورة المنتج مع ملء المساحة المتاحة
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                         </div>
                         <div className="product-content">
                             <div>
                                 <h3 className="product-title">{item.name}</h3>
                                 <div className="product-price">
-                                    {formatCurrency(item.price)} {/* السعر الحالي */}
+                                    {item.price.toLocaleString()} د.ع {/* السعر الحالي */}
                                     {item.originalPrice && (
-                                        <span className="original-price">{formatCurrency(item.originalPrice)}</span> // السعر الأصلي المشطوب (إن وجد)
+                                        <span className="original-price">{item.originalPrice.toLocaleString()} د.ع</span> // السعر الأصلي المشطوب (إن وجد)
                                     )}
                                 </div>
                             </div>
@@ -49,3 +56,4 @@ export default function ProductsPage() {
         </div>
     );
 }
+

@@ -1,12 +1,21 @@
 import Link from "next/link";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
+import dbConnect from "@/lib/mongodb";
+import Product from "@/models/Product";
 
 // صفحة العروض الخاصة (تظهر المنتجات التي عليها خصم فقط)
-export default function OffersPage() {
+export default async function OffersPage() {
+    await dbConnect();
+    let allProducts = await Product.find({}).lean();
+
+    if (!allProducts || allProducts.length === 0) {
+        allProducts = staticProducts as any;
+    }
+
     // تصفية المنتجات لجلب التي عليها عرض (isOffer = true)
-    const offers = products.filter((p) => p.isOffer);
+    const offers = allProducts.filter((p: any) => p.isOffer);
 
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
@@ -17,7 +26,7 @@ export default function OffersPage() {
             <p style={{ textAlign: "center", marginBottom: "4rem", color: "var(--color-text-muted)" }}>خصومات حصرية على مجموعتنا المميزة.</p>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
-                {offers.map((item) => (
+                {offers.map((item: any) => (
                     <div key={item.id} className="product-card">
                         {/* شارة الخصم (تحسب النسبة المئوية تلقائياً) */}
                         <div className="product-badge">
@@ -52,3 +61,4 @@ export default function OffersPage() {
         </div>
     );
 }
+
