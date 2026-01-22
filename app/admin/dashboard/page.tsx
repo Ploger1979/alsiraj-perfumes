@@ -498,7 +498,7 @@ export default function AdminDashboard() {
                                             borderRadius: '20px',
                                             border: formData.size === size ? '2px solid var(--color-gold)' : '1px solid #666',
                                             background: formData.size === size ? 'var(--color-gold)' : 'transparent',
-                                            color: formData.size === size ? '#000' : '#fff',
+                                            color: formData.size === size ? '#000' : 'var(--foreground)',
                                             cursor: 'pointer',
                                             transition: 'all 0.2s'
                                         }}
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
                                 value={formData.size}
                                 onChange={(e) => setFormData({ ...formData, size: e.target.value })}
                                 placeholder="أو اكتب الحجم يدوياً..."
-                                style={{ marginTop: '0.5rem', width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #444', background: 'transparent', color: '#fff' }}
+                                style={{ marginTop: '0.5rem', width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #444', background: 'transparent', color: 'var(--foreground)' }}
                             />
                         </div>
                     </div>
