@@ -54,13 +54,6 @@ export default function AdminAuth() {
         // For login, we only need username and password
         const body = { username, password };
         if (view === 'signup') {
-            // If we allow signup (maybe not? better to remove signup for public)
-            // Ideally public signup should be disabled for an admin panel. 
-            // We should restrict creating users to the logged-in admin.
-            // But if the user WANTS signup, we will connect it.
-            // Let's assume for now we only fix login, and maybe disable signup in UI or connect it if endpoints exist.
-            // As per request "add other admins", usually done from dashboard.
-            // I will update login part here.
             Object.assign(body, { email });
         }
 

@@ -1,69 +1,45 @@
 
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import crypto from 'crypto';
-
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
-
-// دالة مساعدة للحصول على المستخدمين
-function getUsers() {
-    if (!fs.existsSync(usersFilePath)) {
-        return [];
-    }
-    const fileContent = fs.readFileSync(usersFilePath, 'utf8');
-    try {
-        return JSON.parse(fileContent);
-    } catch {
-        return [];
-    }
-}
+import dbConnect from '@/lib/mongodb';
+import User from '@/models/User';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
     try {
+        await dbConnect();
+
         const { username, password, email } = await request.json();
 
-        if (!username || !password || !email) {
-            return NextResponse.json({ error: 'البيانات غير مكتملة' }, { status: 400 });
+        // Validation
+        if (!username || !password) {
+            return NextResponse.json({ error: 'اسم المستخدم وكلمة المرور مطلوبان' }, { status: 400 });
         }
 
-        const users = getUsers();
-
-        // التحقق مما إذا كان المستخدم موجوداً بالفعل
-        if (users.find((u: any) => u.username === username)) {
-            return NextResponse.json({ error: 'اسم المستخدم مسجل مسبقاً' }, { status: 400 });
+        // Check if user already exists
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return NextResponse.json({ error: 'اسم المستخدم هذا مستخدم بالفعل' }, { status: 400 });
         }
 
-        if (users.find((u: any) => u.email === email)) {
-            return NextResponse.json({ error: 'البريد الإلكتروني مسجل مسبقاً' }, { status: 400 });
-        }
+        // Encrypt password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // تشفير كلمة المرور (Hashing) للأمان
-        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-
-        const newUser = {
-            id: Date.now(),
-            username,
-            email,
+        // Create new Admin User
+        // Note: By default we are making them admin as requested.
+        const newUser = new User({
+            username: username || email, // Allow using email as username
             password: hashedPassword,
-            createdAt: new Date().toISOString()
-        };
+            role: 'admin',
+            createdAt: new Date()
+        });
 
-        // إضافة المستخدم وحفظ الملف
-        users.push(newUser);
-
-        // التأكد من وجود المجلد data
-        const dataDir = path.join(process.cwd(), 'data');
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir);
-        }
-
-        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2), 'utf8');
+        await newUser.save();
 
         return NextResponse.json({ success: true, message: 'تم إنشاء الحساب بنجاح' });
 
     } catch (error) {
         console.error('Signup error:', error);
-        return NextResponse.json({ error: 'حدث خطأ في الخادم' }, { status: 500 });
+        return NextResponse.json({ error: 'حدث خطأ أثناء إنشاء الحساب' }, { status: 500 });
     }
 }
