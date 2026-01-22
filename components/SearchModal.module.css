@@ -4,8 +4,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(11, 18, 33, 0.95);
-    /* Dark overlay */
+    background: var(--background);
+    /* Theme-aware background */
     z-index: 2000;
     display: flex;
     justify-content: center;
@@ -17,7 +17,8 @@
 }
 
 .overlay.open {
-    opacity: 1;
+    opacity: 0.98;
+    /* Slightly transparent if needed, or keeping it solid/opaque */
     visibility: visible;
 }
 
@@ -34,7 +35,7 @@
     right: 1.5rem;
     background: none;
     border: none;
-    color: var(--color-white);
+    color: var(--foreground);
     cursor: pointer;
 }
 
@@ -50,12 +51,12 @@
     background: transparent;
     border: none;
     border-bottom: 2px solid var(--color-gold);
-    color: var(--color-white);
+    color: var(--foreground);
     outline: none;
 }
 
 .input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-muted);
 }
 
 .searchIcon {
@@ -77,13 +78,13 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--card-border);
     cursor: pointer;
     transition: background 0.2s ease;
 }
 
 .resultItem:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
 }
 
 .resultImage {
@@ -98,7 +99,7 @@
 }
 
 .resultName {
-    color: var(--color-white);
+    color: var(--foreground);
     font-weight: bold;
     margin-bottom: 0.25rem;
 }

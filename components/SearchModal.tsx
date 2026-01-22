@@ -67,7 +67,7 @@ export default function SearchModal() {
                         </Link>
                     ))}
                     {query && filteredProducts.length === 0 && (
-                        <div style={{ color: "rgba(255,255,255,0.5)", textAlign: "center", marginTop: "2rem" }}>
+                        <div style={{ color: "var(--text-muted)", textAlign: "center", marginTop: "2rem" }}>
                             لا توجد نتائج
                         </div>
                     )}
