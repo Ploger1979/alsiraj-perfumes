@@ -18,6 +18,8 @@ export default async function ProductsPage() {
         products = staticProducts as any;
     }
 
+    products = JSON.parse(JSON.stringify(products));
+
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
             <br />

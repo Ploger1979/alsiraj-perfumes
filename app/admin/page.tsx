@@ -20,6 +20,7 @@ export default function AdminAuth() {
         setSuccess('');
 
         if (view === 'forgot') {
+            // ... (keep forgot password logic or update if needed) ...
             try {
                 const res = await fetch('/api/auth/reset-request', {
                     method: 'POST',
@@ -50,9 +51,18 @@ export default function AdminAuth() {
         }
 
         const endpoint = view === 'login' ? '/api/auth/login' : '/api/auth/signup';
-        const body = view === 'login'
-            ? { username, password }
-            : { username, password, email };
+        // For login, we only need username and password
+        const body = { username, password };
+        if (view === 'signup') {
+            // If we allow signup (maybe not? better to remove signup for public)
+            // Ideally public signup should be disabled for an admin panel. 
+            // We should restrict creating users to the logged-in admin.
+            // But if the user WANTS signup, we will connect it.
+            // Let's assume for now we only fix login, and maybe disable signup in UI or connect it if endpoints exist.
+            // As per request "add other admins", usually done from dashboard.
+            // I will update login part here.
+            Object.assign(body, { email });
+        }
 
         try {
             const res = await fetch(endpoint, {
@@ -63,8 +73,10 @@ export default function AdminAuth() {
 
             const data = await res.json();
 
-            if (res.ok) {
+            if (data.success) { // Our API returns { success: true }
                 if (view === 'login') {
+                    // sessionStorage.setItem('isAdmin', 'true'); 
+                    // No need for session storage if we rely on cookie, or keep it for client compat
                     sessionStorage.setItem('isAdmin', 'true');
                     router.push('/admin/dashboard');
                 } else {
@@ -73,7 +85,7 @@ export default function AdminAuth() {
                     setPassword('');
                 }
             } else {
-                setError(data.error);
+                setError(data.message || data.error || 'حدث خطأ');
             }
         } catch (err) {
             setError('حدث خطأ في الاتصال');

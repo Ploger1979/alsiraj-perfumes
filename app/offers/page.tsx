@@ -19,6 +19,8 @@ export default async function OffersPage() {
         allProducts = staticProducts as any;
     }
 
+    allProducts = JSON.parse(JSON.stringify(allProducts));
+
     // تصفية المنتجات لجلب التي عليها عرض حقيقي (isOffer = true AND has originalPrice)
     const offerProducts = allProducts.filter((p: any) => p.isOffer && p.originalPrice && p.originalPrice > 0);
 

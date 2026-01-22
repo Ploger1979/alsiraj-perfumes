@@ -23,6 +23,7 @@ export default async function Hero() {
 
   // Helper to map DB _id to simpler object if needed (lean() does most of it)
   // We use the custom 'id' field for links, so we are good.
+  products = JSON.parse(JSON.stringify(products));
 
   return (
     <div className={styles.container}>
