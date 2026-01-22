@@ -246,7 +246,6 @@ export default function AdminDashboard() {
                 <button
                     onClick={() => router.push('/admin/users')}
                     className="btn"
-                    style={{ borderColor: 'var(--color-gold)', color: 'var(--color-gold)' }}
                 >
                     إدارة المشرفين 🛡️
                 </button>
