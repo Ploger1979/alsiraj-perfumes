@@ -26,13 +26,13 @@ const lato = Lato({
 
 // إعدادات الـ Metadata (العناوين والوصف الذي يظهر في محركات البحث ومواقع التواصل)
 export const metadata: Metadata = {
-  metadataBase: new URL('https://alsiraj-perfumes.netlify.app'),
+  metadataBase: new URL('https://alsiraj-perfumes.com'),
   title: "السراج للعطور | Alsiraj Lileutur",
   description: "اكتشف الفخامة مع السراج للعطور. عطور وزيوت فرنسية فاخرة.",
   openGraph: {
     title: "السراج للعطور | Alsiraj Lileutur",
     description: "اكتشف الفخامة مع السراج للعطور. عطور وزيوت فرنسية فاخرة.",
-    url: "https://alsiraj-perfumes.netlify.app",
+    url: "https://alsiraj-perfumes.com",
     siteName: "السراج للعطور",
     images: [
       {
