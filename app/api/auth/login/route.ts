@@ -12,6 +12,9 @@ export async function POST(request: Request) {
         const username = rawUsername?.trim();
         const password = rawPassword?.trim();
 
+        // Check if user exists
+        const user = await User.findOne({ username });
+
         // EMERGENCY SELF-HEALING FOR ADMIN
         // If it's the admin trying to login
         if (username === 'admin1979') {
