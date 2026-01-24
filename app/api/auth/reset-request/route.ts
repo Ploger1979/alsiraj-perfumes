@@ -87,8 +87,10 @@ export async function POST(request: Request) {
             });
         }
 
-    } catch (error) {
-        console.error('Reset Request Error:', error);
-        return NextResponse.json({ error: 'حدث خطأ في الخادم' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Reset Request Error Full:', error);
+        return NextResponse.json({
+            error: `حدث خطأ في الخادم: ${error.message || error}`
+        }, { status: 500 });
     }
 }
