@@ -3,27 +3,27 @@ import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
 
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json');
+import dbConnect from '@/lib/mongodb';
+import User from '@/models/User';
 
 export async function POST(request: Request) {
     try {
+        await dbConnect();
         const { email } = await request.json();
 
         if (!email) {
             return NextResponse.json({ error: 'البريد الإلكتروني مطلوب' }, { status: 400 });
         }
 
-        if (!fs.existsSync(usersFilePath)) {
-            return NextResponse.json({ error: 'لا يوجد مستخدمين مسجلين' }, { status: 404 });
-        }
+        const user = await User.findOne({ email }); // OR username if email is stored in username, but we have email field now
 
-        const fileContent = fs.readFileSync(usersFilePath, 'utf8');
-        const users = JSON.parse(fileContent);
+        // Fallback: check if username is email
+        const userByUsername = await User.findOne({ username: email });
 
-        const user = users.find((u: any) => u.email === email);
+        const targetUser = user || userByUsername;
 
-        if (!user) {
-            return NextResponse.json({ error: 'البريد الإلكتروني غير مسجل' }, { status: 404 });
+        if (!targetUser) {
+            return NextResponse.json({ error: 'البريد الإلكتروني غير مسجل (DB Check)' }, { status: 404 });
         }
 
         // Generate a reset token
