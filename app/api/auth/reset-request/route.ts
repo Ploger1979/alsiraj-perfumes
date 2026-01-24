@@ -15,15 +15,19 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'البريد الإلكتروني مطلوب' }, { status: 400 });
         }
 
-        const user = await User.findOne({ email }); // OR username if email is stored in username, but we have email field now
+        // Specific Admin Recovery Logic
+        let targetUser = null;
 
-        // Fallback: check if username is email
-        const userByUsername = await User.findOne({ username: email });
+        // 1. Check by email directly
+        targetUser = await User.findOne({ email });
 
-        const targetUser = user || userByUsername;
+        // 2. Fallback: Check if it's the main admin email trying to recover 'admin1979'
+        if (!targetUser && email === 'aymanploger@gmail.com') {
+            targetUser = await User.findOne({ username: 'admin1979' });
+        }
 
         if (!targetUser) {
-            return NextResponse.json({ error: 'البريد الإلكتروني غير مسجل (DB Check)' }, { status: 404 });
+            return NextResponse.json({ error: `البريد الإلكتروني غير مسجل (DB Check). إيميل: ${email}` }, { status: 404 });
         }
 
         // Generate a reset token
