@@ -186,6 +186,7 @@
     font-size: 0.95rem;
     color: var(--footer-text);
     opacity: 0.8;
+    white-space: nowrap;
 }
 
 .copyright {
@@ -197,8 +198,15 @@
     opacity: 0.6;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     .grid {
-        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        grid-template-columns: 1.5fr 0.8fr 0.9fr 1.3fr;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        /* 2x2 grid on tablets to avoid cramping */
     }
 }
