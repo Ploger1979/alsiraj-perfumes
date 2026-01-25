@@ -26,7 +26,7 @@ export default function ContactPage() {
           </p>
           <div style={{ marginBottom: "2rem" }}>
             <p style={{ marginBottom: "0.5rem" }}>
-              <strong>البريد الإلكتروني:</strong> info@alsiraj.com
+              <strong>البريد الإلكتروني:</strong> info@alsiraj-perfumes.com
             </p>
             <p style={{ marginBottom: "0.5rem" }}>
               <strong>الهاتف:</strong> +49 157 3543 5630
