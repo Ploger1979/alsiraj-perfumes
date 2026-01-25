@@ -4,6 +4,7 @@ export default function JsonLd() {
         "@type": "Store",
         "name": "السراج للعطور | Alsiraj Perfumes",
         "image": "https://alsiraj-perfumes.com/alsiraj-cover.png",
+        "logo": "https://alsiraj-perfumes.com/logo-og.png",
         "description": "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور الفرنسية والشرقية، زيوت عطرية فاخرة، وعطور النيش.",
         "url": "https://alsiraj-perfumes.com",
         "telephone": "+4915735435630",

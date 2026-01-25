@@ -68,9 +68,9 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
+    icon: '/logo-og.png',
+    shortcut: '/logo-og.png',
+    apple: '/logo-og.png',
   },
   twitter: {
     card: "summary_large_image",
