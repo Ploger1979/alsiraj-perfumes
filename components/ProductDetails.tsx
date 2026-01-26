@@ -75,7 +75,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                     justifyContent: 'center'
                                 }}
                             >
-                                &#10094;
+                                &#10095;
                             </button>
                         )}
 
@@ -112,7 +112,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                     justifyContent: 'center'
                                 }}
                             >
-                                &#10095;
+                                &#10094;
                             </button>
                         )}
                     </div>
