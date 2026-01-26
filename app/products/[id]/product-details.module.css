@@ -328,13 +328,15 @@
 
 /* Dark Mode Override - Platinum/White Style */
 :global([data-theme='dark']) .backBtn {
-    border-color: #f8f9fa !important;
-    color: #f8f9fa !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    background-color: transparent !important;
 }
 
 :global([data-theme='dark']) .backBtn:hover {
-    background-color: #f8f9fa !important;
+    background-color: #ffffff !important;
     color: #000000 !important;
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important;
     transform: translateY(-2px);
+    border-color: #ffffff !important;
 }
