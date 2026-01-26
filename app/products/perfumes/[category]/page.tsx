@@ -32,11 +32,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                     {categoryProducts.map((item) => (
                         <div key={item.id} className="product-card">
                             <div className="product-image-container">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="product-image"
-                                />
+                                <Link href={`/products/${item.id}`}>
+                                    <img
+                                        src={item.image}
+                                        alt={item.name}
+                                        className="product-image"
+                                        style={{ cursor: "pointer" }}
+                                    />
+                                </Link>
                             </div>
                             <div className="product-content">
                                 <div>
@@ -48,9 +51,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                                         )}
                                     </div>
                                 </div>
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem', justifyContent: 'center' }}>
+                                <div style={{ display: 'flex', marginTop: '1rem', justifyContent: 'center', width: '100%' }}>
                                     <AddToCartButton product={item} />
-                                    <Link href={`/products/${item.id}`} className="btn">عرض التفاصيل</Link>
                                 </div>
                             </div>
                         </div>

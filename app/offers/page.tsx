@@ -4,6 +4,7 @@ import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
 import Link from 'next/link';
 import Image from 'next/image';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export const metadata = {
     title: 'العروض الخاصة | السراج للعطور',
@@ -61,11 +62,14 @@ export default async function OffersPage() {
                                 </div>
 
                                 <div className="product-image-container">
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        className="product-image"
-                                    />
+                                    <Link href={`/products/${product.id}`}>
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            className="product-image"
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                    </Link>
                                 </div>
                                 <div className="product-info">
                                     <h3 className="product-title">{product.name}</h3>
@@ -88,9 +92,9 @@ export default async function OffersPage() {
                                         )}
                                     </div>
 
-                                    <Link href={`/products/${product.id}`} className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                                        عرض التفاصيل
-                                    </Link>
+                                    <div style={{ display: 'flex', marginTop: '1rem', justifyContent: 'center', width: '100%' }}>
+                                        <AddToCartButton product={product} />
+                                    </div>
                                 </div>
                             </div>
                         ))}

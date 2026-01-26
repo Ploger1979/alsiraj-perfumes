@@ -52,20 +52,22 @@ export default async function Hero() {
           {products.slice(0, 8).map((product: any) => (
             <div key={product.id} className="product-card">
               <div className="product-image-container">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="product-image"
-                />
+                <Link href={`/products/${product.id}`}>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="product-image"
+                    style={{ cursor: "pointer" }}
+                  />
+                </Link>
               </div>
               <div className="product-content">
                 <div>
                   <h3 className="product-title">{product.name}</h3>
                   {/* <p className="product-description">{product.description}</p> */}
                 </div>
-                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', marginTop: '1rem', justifyContent: 'center', width: '100%' }}>
                   <AddToCartButton product={product} />
-                  <Link href={`/products/${product.id}`} className="btn">عرض التفاصيل</Link>
                 </div>
               </div>
             </div>
