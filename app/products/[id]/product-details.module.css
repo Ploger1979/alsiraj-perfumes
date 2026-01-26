@@ -326,13 +326,15 @@
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
+/* Dark Mode Override - Platinum/White Style */
 :global([data-theme='dark']) .backBtn {
-    border-color: #F2C94C;
-    color: #F2C94C;
+    border-color: #f8f9fa !important;
+    color: #f8f9fa !important;
 }
 
 :global([data-theme='dark']) .backBtn:hover {
-    background-color: #F2C94C;
-    color: #0B1221;
-    box-shadow: 0 4px 15px rgba(242, 201, 76, 0.3);
+    background-color: #f8f9fa !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px);
 }
