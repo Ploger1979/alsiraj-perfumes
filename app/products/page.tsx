@@ -33,11 +33,14 @@ export default async function ProductsPage() {
                 {products.map((item: any) => (
                     <div key={item.id} className="product-card">
                         <div className="product-image-container">
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                className="product-image" // صورة المنتج مع ملء المساحة المتاحة
-                            />
+                            <Link href={`/products/${item.id}`}>
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="product-image" // صورة المنتج مع ملء المساحة المتاحة
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </Link>
                         </div>
                         <div className="product-content">
                             <div>
@@ -49,9 +52,8 @@ export default async function ProductsPage() {
                                     )}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem', justifyContent: 'center' }}>
+                            <div style={{ display: 'flex', marginTop: '1rem', justifyContent: 'center', width: '100%' }}>
                                 <AddToCartButton product={item} />
-                                <Link href={`/products/${item.id}`} className="btn">عرض التفاصيل</Link>
                             </div>
                         </div>
                     </div>
