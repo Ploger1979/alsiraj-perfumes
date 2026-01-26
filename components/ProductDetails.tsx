@@ -51,9 +51,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                         {product.images && product.images.length > 1 && (
                             <button
                                 onClick={() => {
-                                    const currentIndex = product.images.indexOf(selectedImage || product.image);
-                                    const prevIndex = (currentIndex - 1 + product.images.length) % product.images.length;
-                                    setSelectedImage(product.images[prevIndex]);
+                                    const images = product.images!;
+                                    const currentIndex = images.indexOf(selectedImage || product.image);
+                                    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+                                    setSelectedImage(images[prevIndex]);
                                 }}
                                 style={{
                                     position: 'absolute',
@@ -87,9 +88,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                         {product.images && product.images.length > 1 && (
                             <button
                                 onClick={() => {
-                                    const currentIndex = product.images.indexOf(selectedImage || product.image);
-                                    const nextIndex = (currentIndex + 1) % product.images.length;
-                                    setSelectedImage(product.images[nextIndex]);
+                                    const images = product.images!;
+                                    const currentIndex = images.indexOf(selectedImage || product.image);
+                                    const nextIndex = (currentIndex + 1) % images.length;
+                                    setSelectedImage(images[nextIndex]);
                                 }}
                                 style={{
                                     position: 'absolute',
