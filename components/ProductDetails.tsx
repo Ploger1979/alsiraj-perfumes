@@ -47,26 +47,73 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             <div className={`container ${styles.productWrapper}`}>
                 {/* Image Section */}
                 <div className={styles.imageSection}>
-                    <div className={styles.mainImageContainer}>
+                    <div className={styles.mainImageContainer} style={{ position: 'relative' }}>
+                        {product.images && product.images.length > 1 && (
+                            <button
+                                onClick={() => {
+                                    const currentIndex = product.images.indexOf(selectedImage || product.image);
+                                    const prevIndex = (currentIndex - 1 + product.images.length) % product.images.length;
+                                    setSelectedImage(product.images[prevIndex]);
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    left: '10px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'rgba(0,0,0,0.5)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '40px',
+                                    height: '40px',
+                                    cursor: 'pointer',
+                                    zIndex: 10,
+                                    fontSize: '20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                &#10094;
+                            </button>
+                        )}
+
                         <img
                             src={selectedImage || product.image}
                             alt={product.name}
                             className={styles.productImage}
                         />
+
+                        {product.images && product.images.length > 1 && (
+                            <button
+                                onClick={() => {
+                                    const currentIndex = product.images.indexOf(selectedImage || product.image);
+                                    const nextIndex = (currentIndex + 1) % product.images.length;
+                                    setSelectedImage(product.images[nextIndex]);
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    right: '10px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'rgba(0,0,0,0.5)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '40px',
+                                    height: '40px',
+                                    cursor: 'pointer',
+                                    zIndex: 10,
+                                    fontSize: '20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                &#10095;
+                            </button>
+                        )}
                     </div>
-                    {product.images && product.images.length > 1 && (
-                        <div className={styles.thumbnails}>
-                            {product.images.map((img, index) => (
-                                <div
-                                    key={index}
-                                    className={`${styles.thumbnail} ${selectedImage === img ? styles.selectedThumbnail : ''}`}
-                                    onClick={() => setSelectedImage(img)}
-                                >
-                                    <img src={img} alt={`${product.name} view ${index + 1}`} />
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
 
                 {/* Details Section */}
