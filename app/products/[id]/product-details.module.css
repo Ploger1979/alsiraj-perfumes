@@ -325,3 +325,14 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
+
+:global([data-theme='dark']) .backBtn {
+    border-color: #F2C94C;
+    color: #F2C94C;
+}
+
+:global([data-theme='dark']) .backBtn:hover {
+    background-color: #F2C94C;
+    color: #0B1221;
+    box-shadow: 0 4px 15px rgba(242, 201, 76, 0.3);
+}
