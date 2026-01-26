@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Product, ProductSize } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { formatCurrency } from '@/utils/format';
@@ -13,6 +14,7 @@ interface ProductDetailsProps {
 export default function ProductDetails({ product }: ProductDetailsProps) {
     // إدارة عربة التسوق: نستخدم هذا الخطاف للوصول إلى وظائف السلة
     const { addToCart } = useCart();
+    const router = useRouter();
 
     // حالة الحجم المختار: نبدأ بأول حجم متاح إذا وجد، وإلا نتركه فارغاً
     const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
@@ -229,6 +231,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             className={styles.whatsappBtn}
                         >
                             اطلب عبر الواتساب (الدفع عند الاستلام)
+                        </button>
+
+                        <button
+                            onClick={() => router.back()}
+                            className={styles.backBtn}
+                        >
+                            عودة للقائمة
                         </button>
                     </div>
 
