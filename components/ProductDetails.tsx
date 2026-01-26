@@ -53,8 +53,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                 onClick={() => {
                                     const images = product.images!;
                                     const currentIndex = images.indexOf(selectedImage || product.image);
-                                    const nextIndex = (currentIndex + 1) % images.length;
-                                    setSelectedImage(images[nextIndex]);
+                                    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+                                    setSelectedImage(images[prevIndex]);
                                 }}
                                 style={{
                                     position: 'absolute',
@@ -90,8 +90,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                 onClick={() => {
                                     const images = product.images!;
                                     const currentIndex = images.indexOf(selectedImage || product.image);
-                                    const prevIndex = (currentIndex - 1 + images.length) % images.length;
-                                    setSelectedImage(images[prevIndex]);
+                                    const nextIndex = (currentIndex + 1) % images.length;
+                                    setSelectedImage(images[nextIndex]);
                                 }}
                                 style={{
                                     position: 'absolute',
