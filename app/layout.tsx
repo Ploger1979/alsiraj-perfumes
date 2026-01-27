@@ -27,13 +27,30 @@ const lato = Lato({
 
 // إعدادات الـ Metadata (العناوين والوصف الذي يظهر في محركات البحث ومواقع التواصل)
 export const metadata: Metadata = {
-  metadataBase: new URL('https://alsiraj-perfumes.com'),
+  metadataBase: new URL("https://alsiraj-perfumes.com"),
   title: {
     default: "السراج للعطور | أفضل العطور الفرنسية والشرقية في أوروبا",
-    template: "%s | السراج للعطور"
+    template: "%s | السراج للعطور",
   },
-  description: "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور الفرنسية والشرقية، زيوت عطرية فاخرة، وعطور النيش بأسعار منافسة. تسوق الآن واحصل على تجربة عطرية لا تنسى.",
-  keywords: ["عطور", "السراج للعطور", "عطور فرنسية", "عطور شرقية", "زيوت عطرية", "مسك", "عود", "هدايا عطور", "تسوق عطور اونلاين", "Alsiraj Perfumes", "Perfumes", "Fragrance", "Oud", "Musk", "Luxury Perfumes"],
+  description:
+    "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور الفرنسية والشرقية، زيوت عطرية فاخرة، وعطور النيش بأسعار منافسة. تسوق الآن واحصل على تجربة عطرية لا تنسى.",
+  keywords: [
+    "عطور",
+    "السراج للعطور",
+    "عطور فرنسية",
+    "عطور شرقية",
+    "زيوت عطرية",
+    "مسك",
+    "عود",
+    "هدايا عطور",
+    "تسوق عطور اونلاين",
+    "Alsiraj Perfumes",
+    "Perfumes",
+    "Fragrance",
+    "Oud",
+    "Musk",
+    "Luxury Perfumes",
+  ],
   authors: [{ name: "Alsiraj Perfumes" }],
   creator: "Alsiraj Perfumes",
   publisher: "Alsiraj Perfumes",
@@ -43,22 +60,25 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   alternates: {
-    canonical: 'https://alsiraj-perfumes.com',
+    canonical: "https://alsiraj-perfumes.com",
   },
+
   openGraph: {
     title: "السراج للعطور | أفضل العطور الفرنسية والشرقية",
-    description: "اكتشف عالم الفخامة مع السراج للعطور. تشكيلة واسعة من العطور العالمية والشرقية الفاخرة.",
+    description:
+      "اكتشف عالم الفخامة مع السراج للعطور. تشكيلة واسعة من العطور العالمية والشرقية الفاخرة.",
     url: "https://alsiraj-perfumes.com",
     siteName: "السراج للعطور | Alsiraj Perfumes",
     images: [
       {
-        url: "/alsiraj-cover.png",
+        // ✅ رابط كامل للصورة (أفضل للسوشيال)
+        url: "https://alsiraj-perfumes.com/og-cover.png",
         width: 1200,
         height: 630,
         alt: "السراج للعطور - فخامة العطـور",
@@ -72,12 +92,15 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Perfumes",
     description: "اكتشف فخامة العطور الفرنسية والشرقية مع السراج.",
-    images: ["/alsiraj-cover.png"],
+    // ✅ رابط كامل للصورة
+    images: ["https://alsiraj-perfumes.com/og-cover.png"],
   },
+
   verification: {
     google: "Z84LXGtIqDF8x_jAW5BU9BoTqXKr7Pbzsw-GzwGG_Uo",
   },
 };
+
 
 // المخطط الرئيسي (Layout) الذي يحيط بكل صفحات الموقع
 // هنا نضع الأشياء الثابتة مثل الـ Navbar والـ Footer ومزودي الخدمات (Providers)
