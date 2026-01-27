@@ -7,7 +7,7 @@
 A modern, responsive perfume shop website built with **Next.js** and **TypeScript**, focusing on clean UI, performance, and a smooth browsing experience.
 
 ## 🌐 Live Demo
-(https://alsiraj-perfumes.com/)
+https://alsiraj-perfumes.com/
 
 ## ✨ Features
 - Responsive layout (mobile / tablet / desktop)
