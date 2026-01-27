@@ -1,4 +1,5 @@
-![Alsiraj Perfumes Preview](public/preview.png)
+![Alsiraj Perfumes Preview](preview.png)
+
 
 
 # Alsiraj Perfumes – Website
