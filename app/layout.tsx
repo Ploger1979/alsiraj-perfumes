@@ -25,60 +25,33 @@ const lato = Lato({
   display: "swap",
 });
 
-// إعدادات الـ Metadata (العناوين والوصف الذي يظهر في محركات البحث ومواقع التواصل)
+const siteUrl = "https://alsiraj-perfumes.com";
+const ogImage = `${siteUrl}/og-cover.png`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://alsiraj-perfumes.com"),
+  metadataBase: new URL(siteUrl),
+
   title: {
     default: "السراج للعطور | أفضل العطور الفرنسية والشرقية في أوروبا",
     template: "%s | السراج للعطور",
   },
+
   description:
     "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور الفرنسية والشرقية، زيوت عطرية فاخرة، وعطور النيش بأسعار منافسة. تسوق الآن واحصل على تجربة عطرية لا تنسى.",
-  keywords: [
-    "عطور",
-    "السراج للعطور",
-    "عطور فرنسية",
-    "عطور شرقية",
-    "زيوت عطرية",
-    "مسك",
-    "عود",
-    "هدايا عطور",
-    "تسوق عطور اونلاين",
-    "Alsiraj Perfumes",
-    "Perfumes",
-    "Fragrance",
-    "Oud",
-    "Musk",
-    "Luxury Perfumes",
-  ],
-  authors: [{ name: "Alsiraj Perfumes" }],
-  creator: "Alsiraj Perfumes",
-  publisher: "Alsiraj Perfumes",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+
   alternates: {
-    canonical: "https://alsiraj-perfumes.com",
+    canonical: siteUrl,
   },
 
   openGraph: {
     title: "السراج للعطور | أفضل العطور الفرنسية والشرقية",
     description:
       "اكتشف عالم الفخامة مع السراج للعطور. تشكيلة واسعة من العطور العالمية والشرقية الفاخرة.",
-    url: "https://alsiraj-perfumes.com",
+    url: siteUrl,
     siteName: "السراج للعطور | Alsiraj Perfumes",
     images: [
       {
-        // ✅ رابط كامل للصورة (أفضل للسوشيال)
-        url: "https://alsiraj-perfumes.com/og-cover.png",
+        url: ogImage, // ✅ رابط كامل
         width: 1200,
         height: 630,
         alt: "السراج للعطور - فخامة العطـور",
@@ -92,8 +65,19 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Perfumes",
     description: "اكتشف فخامة العطور الفرنسية والشرقية مع السراج.",
-    // ✅ رابط كامل للصورة
-    images: ["https://alsiraj-perfumes.com/og-cover.png"],
+    images: [ogImage], // ✅ رابط كامل
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 
   verification: {
