@@ -67,11 +67,7 @@ export const metadata: Metadata = {
     locale: "ar_IQ",
     type: "website",
   },
-  icons: {
-    icon: '/logo-og.png',
-    shortcut: '/logo-og.png',
-    apple: '/logo-og.png',
-  },
+
   twitter: {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Perfumes",
