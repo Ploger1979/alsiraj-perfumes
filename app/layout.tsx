@@ -55,6 +55,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "السراج للعطور - فخامة العطـور",
+        type: "image/png",
       },
     ],
     locale: "ar_IQ",
