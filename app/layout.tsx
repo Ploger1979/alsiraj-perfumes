@@ -26,7 +26,7 @@ const lato = Lato({
 });
 
 const siteUrl = "https://alsiraj-perfumes.com";
-const ogImage = `${siteUrl}/og-cover-v2.png`;
+const ogImage = `${siteUrl}/alsiraj-logo-new.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -43,6 +43,12 @@ export const metadata: Metadata = {
     canonical: siteUrl,
   },
 
+  icons: {
+    icon: "/alsiraj-logo-new.png",
+    shortcut: "/alsiraj-logo-new.png",
+    apple: "/alsiraj-logo-new.png",
+  },
+
   openGraph: {
     title: "السراج للعطور | أفضل العطور الفرنسية والشرقية",
     description:
@@ -52,8 +58,6 @@ export const metadata: Metadata = {
     images: [
       {
         url: ogImage, // ✅ رابط كامل
-        width: 1200,
-        height: 630,
         alt: "السراج للعطور - فخامة العطـور",
         type: "image/png",
       },
