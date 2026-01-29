@@ -26,7 +26,7 @@ const lato = Lato({
 });
 
 const siteUrl = "https://alsiraj-perfumes.com";
-const ogImage = `${siteUrl}/alsiraj-cover.png`;
+const ogImage = `${siteUrl}/og-cover-v2.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
