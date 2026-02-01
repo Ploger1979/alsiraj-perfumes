@@ -44,9 +44,9 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/logo-Circle.png",
-    shortcut: "/logo-Circle.png",
-    apple: "/logo-Circle.png",
+    icon: "/favicon-gold.png",
+    shortcut: "/favicon-gold.png",
+    apple: "/favicon-gold.png",
   },
 
   openGraph: {
