@@ -2,6 +2,8 @@
 import { products } from "@/data/products";
 import ProductDetails from "@/components/ProductDetails";
 import { notFound } from "next/navigation";
+import dbConnect from "@/lib/mongodb";
+import Product from "@/models/Product";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -19,10 +21,39 @@ export async function generateStaticParams() {
 export default async function ProductPage({ params }: PageProps) {
     const resolvedParams = await params;
     const productId = parseInt(resolvedParams.id);
-    const product = products.find((p) => p.id === productId);
+
+    // محاولة جلب المنتج من قاعدة البيانات أولاً
+    // Try fetching from DB first
+    let product: any = null;
+    try {
+        await dbConnect();
+        product = await Product.findOne({ id: productId }).lean();
+    } catch (e) {
+        console.error("Database fetch error:", e);
+    }
+
+    // إذا لم يوجد في الداتابيس، ابحث في الملف الثابت (للمنتجات القديمة)
+    // If not in DB, check static file
+    if (!product) {
+        product = products.find((p) => p.id === productId);
+    }
 
     if (!product) {
         notFound(); // إذا لم يوجد المنتج، اعرض صفحة 404
+    }
+
+    // تحويل _id وتاريخ الإنشاء المتعارض مع التسلسل إذا لزم الأمر
+    if (product._id) {
+        product._id = product._id.toString();
+    }
+    if (product.createdAt) {
+        product.createdAt = product.createdAt.toString();
+    }
+
+    // التأكد من أن الصور موجودة
+    // Ensure images array exists
+    if (!product.images) {
+        product.images = product.image ? [product.image] : [];
     }
 
     return <ProductDetails product={product} />;

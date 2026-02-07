@@ -1,10 +1,22 @@
-
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
 
-// هذه الدالة مسؤولة عن استقبال الملف وحفظه
-// This function handles file reception and saving
+// إعداد Cloudinary إذا توفرت المفاتيح
+// Configure Cloudinary if keys are present
+const cloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME &&
+    process.env.CLOUDINARY_API_KEY &&
+    process.env.CLOUDINARY_API_SECRET;
+
+if (cloudinaryConfigured) {
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+}
+
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
@@ -14,37 +26,54 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'لم يتم اختيار أي ملف' }, { status: 400 });
         }
 
-        // تحويل الملف إلى Buffer للحفظ
-        // Convert file to buffer for saving
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // تنظيف اسم الملف وإضافة توقيت لضمان عدم تكرار الاسم
-        // Sanitize filename and add timestamp to ensure uniqueness
+        // الخيار الأول: الرفع على Cloudinary (للإنتاج)
+        // Option 1: Upload to Cloudinary (Production)
+        if (cloudinaryConfigured) {
+            try {
+                const uploadResult = await new Promise<any>((resolve, reject) => {
+                    cloudinary.uploader.upload_stream(
+                        { folder: 'alsiraj-products' },
+                        (error, result) => {
+                            if (error) reject(error);
+                            else resolve(result);
+                        }
+                    ).end(buffer);
+                });
+
+                return NextResponse.json({ success: true, path: uploadResult.secure_url });
+            } catch (cloudError) {
+                console.error('Cloudinary upload failed:', cloudError);
+                return NextResponse.json({ error: 'فشل الرفع السحابي' }, { status: 500 });
+            }
+        }
+
+        // الخيار الثاني: الرفع المحلي (Localhost فقط)
+        // Option 2: Local Upload (Localhost only)
+        // تنظيف اسم الملف وإضافة توقيت
         const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const fileName = `${Date.now()}-${safeName}`;
-
-        // تحديد مسار الحفظ (داخل مجلد public/images/uploads)
-        // Define save path (inside public/images/uploads)
         const uploadDir = path.join(process.cwd(), 'public', 'images', 'uploads');
 
-        // التأكد من وجود المجلد، وإنشاؤه إذا لم يكن موجوداً
-        // Ensure directory exists
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
 
         const filePath = path.join(uploadDir, fileName);
-
-        // حفظ الملف فعلياً
-        // Write the file to disk
         fs.writeFileSync(filePath, buffer);
 
-        // إرجاع رابط الصورة ليتم استخدامه في المنتج
-        // Return image path to be used in product
-        const publicPath = `/images/uploads/${fileName}`;
+        // تحذير في الإنتاج
+        if (process.env.NODE_ENV === 'production') {
+            console.warn("WARNING: Uploading to local filesystem in production. Images will be lost on redeploy.");
+        }
 
-        return NextResponse.json({ success: true, path: publicPath });
+        return NextResponse.json({
+            success: true,
+            path: `/images/uploads/${fileName}`,
+            warning: process.env.NODE_ENV === 'production' ? 'تم الرفع محلياً (غير آمن للإنتاج)' : undefined
+        });
 
     } catch (error) {
         console.error('Upload error:', error);
