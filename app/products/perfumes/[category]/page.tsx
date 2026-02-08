@@ -63,7 +63,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                                     <h3 className="product-title">{item.name}</h3>
                                     <div className="product-price">
                                         {formatCurrency(item.price)}
-                                        {item.originalPrice && item.originalPrice > 0 && (
+                                        {(item.originalPrice || 0) > 0 && (
                                             <span className="original-price">{formatCurrency(item.originalPrice)}</span>
                                         )}
                                     </div>

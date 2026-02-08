@@ -47,7 +47,7 @@ export default async function ProductsPage() {
                                 <h3 className="product-title">{item.name}</h3>
                                 <div className="product-price">
                                     {item.price.toLocaleString()} د.ع {/* السعر الحالي */}
-                                    {item.originalPrice > 0 && (
+                                    {(item.originalPrice || 0) > 0 && (
                                         <span className="original-price">{item.originalPrice.toLocaleString()} د.ع</span>
                                     )}
                                 </div>
