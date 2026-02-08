@@ -42,13 +42,9 @@ export default async function ProductPage({ params }: PageProps) {
         notFound(); // إذا لم يوجد المنتج، اعرض صفحة 404
     }
 
-    // تحويل _id وتاريخ الإنشاء المتعارض مع التسلسل إذا لزم الأمر
-    if (product._id) {
-        product._id = product._id.toString();
-    }
-    if (product.createdAt) {
-        product.createdAt = product.createdAt.toString();
-    }
+    // تحويل الكائن بالكامل لتجنب مشاكل التسلسل (Serialization Error) مع Next.js
+    // This handles nested _id fields (like in sizes array) automatically
+    product = JSON.parse(JSON.stringify(product));
 
     // التأكد من أن الصور موجودة
     // Ensure images array exists
