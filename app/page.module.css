@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(rgba(11, 18, 33, 0.6), rgba(11, 18, 33, 0.8)), url('https://images.unsplash.com/photo-1615634260167-c8cdede054de?q=80&w=2000&auto=format&fit=crop') no-repeat center center/cover;
-  background-attachment: fixed;
+  /* background removed to be handled by HeroSlider component */
+  background: #0b1221;
 }
 
 .heroContent {

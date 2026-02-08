@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroSlider from "@/components/HeroSlider";
 import styles from "./page.module.css";
 // import { products } from "@/data/products"; // Deprecated
 import { formatCurrency } from "@/utils/format";
@@ -30,7 +31,8 @@ export default async function Hero() {
       {/* Hero Section */}
       {/* القسم الترحيبي (Hero Section): أول ما يراه الزائر */}
       <section className={styles.hero}>
-        <div className={styles.heroContent}>
+        <HeroSlider />
+        <div className={styles.heroContent} style={{ zIndex: 5, position: 'relative' }}>
           <h1 className={styles.heroTitle}>السراج للعطور</h1>
           <p className={styles.heroSubtitle}>اكتشف فخامة التراث العربي بأناقة العطور الفرنسية.</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
