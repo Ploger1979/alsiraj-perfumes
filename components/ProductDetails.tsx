@@ -149,7 +149,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                     <div style={{ textAlign: 'left' }}>
                                         {(sizeOption.originalPrice || 0) > 0 && (
                                             <div style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.8rem' }}>
-                                                {formatCurrency(sizeOption.originalPrice)}
+                                                {formatCurrency(sizeOption.originalPrice || 0)}
                                             </div>
                                         )}
                                         <div style={{ color: selectedSize?.size === sizeOption.size ? '#000' : '#d4af37', fontWeight: 'bold' }}>
