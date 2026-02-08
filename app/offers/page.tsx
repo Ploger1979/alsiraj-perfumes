@@ -31,7 +31,7 @@ export default async function OffersPage() {
             <main className="container" style={{ paddingTop: '100px', paddingBottom: '50px', minHeight: '80vh' }}>
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--color-gold)' }}>العروض الخاصة 🔥</h1>
-                    <p style={{ color: '#666', fontSize: '1.2rem' }}>اغتنم الفرصة وتسوق عطورك المفضلة بأفضل الأسعار</p>
+                    <p style={{ color: 'white', fontSize: '1.2rem' }}>اغتنم الفرصة وتسوق عطورك المفضلة بأفضل الأسعار</p>
                 </div>
 
                 {offerProducts.length === 0 ? (
