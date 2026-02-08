@@ -1,12 +1,20 @@
 .hero {
   position: relative;
-  height: 90vh;
+  /* Medium height to show more of the background image without excessive cropping */
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   /* background removed to be handled by HeroSlider component */
   background: #0b1221;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 55vh;
+    /* Shorter on mobile to prevent extreme zooming of landscape images */
+  }
 }
 
 .heroContent {
