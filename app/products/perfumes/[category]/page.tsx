@@ -1,9 +1,13 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
+import { products as staticProducts } from "@/data/products";
 import { formatCurrency } from "@/utils/format";
 import AddToCartButton from "@/components/AddToCartButton";
+import dbConnect from "@/lib/mongodb";
+import Product from "@/models/Product";
+
+export const dynamic = 'force-dynamic';
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
     const { category } = await params;
@@ -14,9 +18,22 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                 category === "women" ? "مجموعة النساء" :
                     category === "eau-de-toilette" ? "Eau de Toilette" : category;
 
+    await dbConnect();
+
+    // Fetch products from DB
+    let allProducts = await Product.find({}).lean();
+
+    // Fallback to static if DB is empty
+    if (!allProducts || allProducts.length === 0) {
+        allProducts = staticProducts as any;
+    }
+
+    // Convert to plain JSON to avoid serialization issues
+    const safeProducts = JSON.parse(JSON.stringify(allProducts));
+
     const categoryProducts = category === "eau-de-toilette"
-        ? products.filter((p) => p.concentration === "Eau de Toilette")
-        : products.filter((p) => p.category === category);
+        ? safeProducts.filter((p: any) => p.concentration === "Eau de Toilette")
+        : safeProducts.filter((p: any) => p.category === category);
 
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
@@ -29,7 +46,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
             {categoryProducts.length > 0 ? (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
-                    {categoryProducts.map((item) => (
+                    {categoryProducts.map((item: any) => (
                         <div key={item.id} className="product-card">
                             <div className="product-image-container">
                                 <Link href={`/products/${item.id}`}>
@@ -45,9 +62,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                                 <div>
                                     <h3 className="product-title">{item.name}</h3>
                                     <div className="product-price">
-                                        {item.price.toLocaleString()} د.ع
-                                        {item.originalPrice && (
-                                            <span className="original-price">{item.originalPrice.toLocaleString()} د.ع</span>
+                                        {formatCurrency(item.price)}
+                                        {item.originalPrice && item.originalPrice > 0 && (
+                                            <span className="original-price">{formatCurrency(item.originalPrice)}</span>
                                         )}
                                     </div>
                                 </div>
