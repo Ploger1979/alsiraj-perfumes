@@ -34,7 +34,7 @@ export default async function Hero() {
         <HeroSlider />
         <div className={styles.heroContent} style={{ zIndex: 5, position: 'relative' }}>
           <h1 className={styles.heroTitle}>السراج للعطور</h1>
-          <p className={styles.heroSubtitle}>اكتشف فخامة التراث العربي بأناقة العطور الفرنسية.</p>
+          <p className={styles.heroSubtitle}>اكتشف فخامة التراث العربي بأناقة العطور الفرنسية</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <Link href="/products" className="btn btn-primary">
               تسوق الآن
