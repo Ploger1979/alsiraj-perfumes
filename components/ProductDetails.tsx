@@ -16,9 +16,26 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const { addToCart } = useCart();
     const router = useRouter();
 
+    // Fix: If the admin updated the main product price (e.g. for an offer), but didn't update the sizes array,
+    // we should respect the main price for the default size.
+    // Create a safe derived version of sizes that respects standard price overrides
+    const displaySizes = product.sizes?.map((s, i) => {
+        // If it's the first size (default) and there is a mismatch with the root price,
+        // assume the root price is the intended "current" price (e.g. Offer Price).
+        if (i === 0 && product.price !== s.price) {
+            return {
+                ...s,
+                price: product.price,
+                // If originalPrice is set on product, use it, otherwise keep size's original (or none)
+                originalPrice: product.originalPrice || s.originalPrice
+            };
+        }
+        return s;
+    });
+
     // حالة الحجم المختار: نبدأ بأول حجم متاح إذا وجد، وإلا نتركه فارغاً
     const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
-        product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined
+        displaySizes && displaySizes.length > 0 ? displaySizes[0] : undefined
     );
 
     // حالة الصورة المختارة: نبدأ بالصورة الرئيسية للمنتج
@@ -131,9 +148,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
 
                     {/* Size Selection */}
-                    {product.sizes && product.sizes.length > 0 && (
+                    {displaySizes && displaySizes.length > 0 && (
                         <div className={styles.sizeSelection}>
-                            {product.sizes.map((sizeOption, index) => (
+                            {displaySizes.map((sizeOption, index) => (
                                 <div
                                     key={index}
                                     className={`${styles.sizeOption} ${selectedSize?.size === sizeOption.size ? styles.selected : ''}`}

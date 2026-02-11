@@ -83,9 +83,21 @@ export default function Footer() {
 
                     {/* حقوق النشر */}
                     <div className={styles.copyright}>
-                        <p>
-                            &copy; {new Date().getFullYear()} السراج للعطور. جميع الحقوق محفوظة.
-                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                            <p>
+                                &copy; {new Date().getFullYear()} السراج للعطور. جميع الحقوق محفوظة.
+                            </p>
+                            <img
+                                src="/logo-ohne-bg.png"
+                                alt="Alsiraj Logo"
+                                style={{
+                                    height: '40px',
+                                    width: 'auto',
+                                    filter: 'brightness(1.5)', // Adjust for dark theme if needed
+                                    opacity: 0.9
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
