@@ -21,6 +21,7 @@
 
   --font-heading: var(--font-playfair);
   --font-body: var(--font-lato);
+  --logo-filter: invert(1);
 }
 
 [data-theme='dark'] {
@@ -36,6 +37,7 @@
 
   /* Dark Mode Gradient (Navy Waves) */
   --bg-gradient: linear-gradient(270deg, #0B1221, #162447, #1f3a6e, #0B1221);
+  --logo-filter: brightness(1.5);
 }
 
 * {

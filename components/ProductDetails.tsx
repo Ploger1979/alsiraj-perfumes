@@ -16,22 +16,41 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const { addToCart } = useCart();
     const router = useRouter();
 
-    // Fix: If the admin updated the main product price (e.g. for an offer), but didn't update the sizes array,
-    // we should respect the main price for the default size.
-    // Create a safe derived version of sizes that respects standard price overrides
-    const displaySizes = product.sizes?.map((s, i) => {
-        // If it's the first size (default) and there is a mismatch with the root price,
-        // assume the root price is the intended "current" price (e.g. Offer Price).
-        if (i === 0 && product.price !== s.price) {
-            return {
-                ...s,
-                price: product.price,
-                // If originalPrice is set on product, use it, otherwise keep size's original (or none)
-                originalPrice: product.originalPrice || s.originalPrice
-            };
+    // Fix: Smartly map the admin's root "product.price" to the correct size variant.
+    // If the admin sets a price higher than any existing variant, assume it's for the largest/most expensive variant.
+    // If lower than any existing variant, assume it's for the smallest variant.
+    const displaySizes = product.sizes?.map(s => s); // Clone
+
+    if (displaySizes && displaySizes.length > 0) {
+        const prices = displaySizes.map(s => s.price);
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+
+        // Admin increased price beyond current max -> Update the most expensive variant (usually largest)
+        if (product.price > maxPrice) {
+            const maxIndex = displaySizes.findIndex(s => s.price === maxPrice);
+            if (maxIndex !== -1) {
+                displaySizes[maxIndex] = {
+                    ...displaySizes[maxIndex],
+                    price: product.price,
+                    originalPrice: product.originalPrice || displaySizes[maxIndex].originalPrice
+                };
+            }
         }
-        return s;
-    });
+        // Admin decreased price below current min -> Update the cheapest variant (usually smallest)
+        else if (product.price < minPrice) {
+            const minIndex = displaySizes.findIndex(s => s.price === minPrice);
+            if (minIndex !== -1) {
+                displaySizes[minIndex] = {
+                    ...displaySizes[minIndex],
+                    price: product.price,
+                    originalPrice: product.originalPrice || displaySizes[minIndex].originalPrice
+                };
+            }
+        }
+        // If price is in between, strictly avoid overwriting to prevent anomalies.
+        // The admin should use the correct variant editing tools for precise changes.
+    }
 
     // حالة الحجم المختار: نبدأ بأول حجم متاح إذا وجد، وإلا نتركه فارغاً
     const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(

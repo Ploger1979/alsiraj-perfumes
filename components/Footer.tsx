@@ -93,7 +93,7 @@ export default function Footer() {
                                 style={{
                                     height: '40px',
                                     width: 'auto',
-                                    filter: 'brightness(1.5)', // Adjust for dark theme if needed
+                                    filter: 'var(--logo-filter)', // Use theme-aware filter
                                     opacity: 0.9
                                 }}
                             />
