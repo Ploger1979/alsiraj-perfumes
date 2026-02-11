@@ -9,12 +9,7 @@ interface PageProps {
     params: Promise<{ id: string }>;
 }
 
-// دالة لتوليد صفحات المنتجات تلقائياً (SSG) لتحسين الأداء
-export async function generateStaticParams() {
-    return products.map((product) => ({
-        id: product.id.toString(),
-    }));
-}
+export const dynamic = 'force-dynamic';
 
 // صفحة المنتج الفردية (Dynamic Route)
 // تستقبل الـ id من الرابط وتعرض تفاصيل المنتج
