@@ -50,7 +50,7 @@ export const products: Product[] = [
         description: "عطر نسائي ساحر برائحة الياسمين والعنبر. عطر يجسد الأنوثة والغموض بنفحاته الزهرية الخشبية المميزة.",
         price: 120000,
         image: "/images/Alien2.webp",
-        images: ["/images/Alien2.webp"],
+        images: ["/images/Alien2.webp", "/images/Alien2.webp", "/images/Alien2.webp"],
         isFeatured: true,
         category: "women",
         gender: "نسائي",
@@ -1056,8 +1056,8 @@ export const products: Product[] = [
             { size: "100 مل", price: 1550000 }
         ]
     },
-    
-    
+
+
     {
         id: 1768587272658,
         name: "Diala",
