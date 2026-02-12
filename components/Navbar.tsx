@@ -79,6 +79,14 @@ export default function Navbar() {
                     </button>
                 </div>
 
+                <button
+                    className={styles.mobileSearch}
+                    onClick={() => setIsSearchOpen(true)}
+                    aria-label="بحث"
+                >
+                    <Search size={24} />
+                </button>
+
                 <button className={styles.mobileButton} onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>

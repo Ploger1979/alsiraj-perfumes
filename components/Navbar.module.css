@@ -145,4 +145,20 @@
     .mobileButton {
         display: none;
     }
+
+    .mobileSearch {
+        display: none;
+    }
+}
+
+.mobileSearch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-gold);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    /* Adjust spacing from hamburger */
 }
