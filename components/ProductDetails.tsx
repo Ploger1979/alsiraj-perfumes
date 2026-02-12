@@ -47,7 +47,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     // حساب السعر الحالي بناءً على الحجم المختار
     const currentPrice = selectedSize ? selectedSize.price : product.price;
-    const currentOriginalPrice = selectedSize ? selectedSize.originalPrice : product.originalPrice;
+
+    const FREE_SHIPPING_THRESHOLD = 200000;
+    const isFreeShipping = currentPrice >= FREE_SHIPPING_THRESHOLD;
 
     return (
         <div className={styles.container}>
@@ -173,7 +175,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             <span>متوفر (Online)</span>
                         </div>
                         <div className={styles.deliveryInfo}>
-                            <span>شحن مجاني للطلبات فوق 200,000 د.ع</span>
+                            <span>
+                                {isFreeShipping
+                                    ? "✨ هذا المنتج مؤهل للشحن المجاني"
+                                    : `شحن مجاني للطلبات فوق ${formatCurrency(FREE_SHIPPING_THRESHOLD)}`
+                                }
+                            </span>
                         </div>
                         <div className={styles.deliveryInfo}>
                             <span>التوصيل: يومين - 4 أيام عمل</span>
@@ -199,8 +206,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                     color: '#fff'
                                 }}
                             >
-                                <option value="baghdad">داخل بغداد (5,000 د.ع)</option>
-                                <option value="provinces">خارج بغداد / محافظات (8,000 د.ع)</option>
+                                <option value="baghdad">
+                                    داخل بغداد ({isFreeShipping ? "مجاني" : "5,000 د.ع"})
+                                </option>
+                                <option value="provinces">
+                                    خارج بغداد / محافظات ({isFreeShipping ? "مجاني" : "8,000 د.ع"})
+                                </option>
                             </select>
                         </div>
 
@@ -214,7 +225,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             onClick={() => {
                                 const price = selectedSize ? selectedSize.price : product.price;
                                 const sizeLabel = selectedSize ? selectedSize.size : (product.size || 'Standard');
-                                const deliveryCost = deliveryType === 'baghdad' ? 5000 : 8000;
+
+                                // Calculate dynamic delivery cost
+                                const baseDeliveryCost = deliveryType === 'baghdad' ? 5000 : 8000;
+                                const deliveryCost = isFreeShipping ? 0 : baseDeliveryCost;
+
                                 const locationLabel = deliveryType === 'baghdad' ? 'داخل بغداد' : 'محافظات';
                                 const totalWithDelivery = price + deliveryCost;
 
@@ -223,7 +238,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
                                 message += `\n------------------\n`;
                                 message += `المجموع الفرعي: ${formatCurrency(price)}\n`;
-                                message += `التوصيل (${locationLabel}): ${formatCurrency(deliveryCost)}\n`;
+
+                                if (isFreeShipping) {
+                                    message += `التوصيل (${locationLabel}): مجاني ✨\n`;
+                                } else {
+                                    message += `التوصيل (${locationLabel}): ${formatCurrency(deliveryCost)}\n`;
+                                }
 
                                 message += `\n*المجموع الكلي: ${formatCurrency(totalWithDelivery)}*\n`;
                                 message += `------------------\n`;
