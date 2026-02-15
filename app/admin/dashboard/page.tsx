@@ -78,6 +78,9 @@ export default function AdminDashboard() {
         }
     }, [activeTab]);
 
+    // State for tracking which size index is being edited (-1 means none)
+    const [editingSizeIndex, setEditingSizeIndex] = useState(-1);
+
     const fetchProducts = async () => {
         try {
             const res = await fetch('/api/admin/products');
@@ -372,17 +375,37 @@ export default function AdminDashboard() {
                                                 {Number(s.originalPrice).toLocaleString()} د.ع
                                             </div>
                                         )}
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                const newSizes = [...formData.sizes];
-                                                newSizes.splice(idx, 1);
-                                                setFormData({ ...formData, sizes: newSizes });
-                                            }}
-                                            style={{ background: 'rgba(255,0,0,0.1)', color: 'red', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
-                                        >
-                                            حذف 🗑️
-                                        </button>
+                                        <div style={{ display: 'flex', gap: '5px' }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setNewSizeState({
+                                                        size: s.size,
+                                                        price: String(s.price),
+                                                        originalPrice: s.originalPrice ? String(s.originalPrice) : ''
+                                                    });
+                                                    setEditingSizeIndex(idx);
+                                                }}
+                                                style={{ background: 'rgba(212, 175, 55, 0.1)', color: 'var(--color-gold)', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                                            >
+                                                تعديل ✏️
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newSizes = [...formData.sizes];
+                                                    newSizes.splice(idx, 1);
+                                                    setFormData({ ...formData, sizes: newSizes });
+                                                    if (editingSizeIndex === idx) {
+                                                        setEditingSizeIndex(-1);
+                                                        setNewSizeState({ size: '', price: '', originalPrice: '' });
+                                                    }
+                                                }}
+                                                style={{ background: 'rgba(255,0,0,0.1)', color: 'red', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                                            >
+                                                حذف 🗑️
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
 
@@ -408,23 +431,57 @@ export default function AdminDashboard() {
                                         onChange={(e) => setNewSizeState({ ...newSizeState, originalPrice: e.target.value })}
                                         style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', background: '#333', border: '1px solid #555', color: '#fff' }}
                                     />
+
+                                    {editingSizeIndex !== -1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setEditingSizeIndex(-1);
+                                                setNewSizeState({ size: '', price: '', originalPrice: '' });
+                                            }}
+                                            style={{ background: '#444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}
+                                        >
+                                            إلغاء ✕
+                                        </button>
+                                    )}
+
                                     <button
                                         type="button"
                                         onClick={() => {
                                             if (!newSizeState.size || !newSizeState.price) return alert('الرجاء إدخال الحجم والسعر');
-                                            setFormData({
-                                                ...formData,
-                                                sizes: [...formData.sizes, {
-                                                    size: newSizeState.size,
-                                                    price: String(Number(newSizeState.price)),
-                                                    originalPrice: String(Number(newSizeState.originalPrice || 0))
-                                                }]
-                                            });
+
+                                            const newSizeObj = {
+                                                size: newSizeState.size,
+                                                price: String(Number(newSizeState.price)),
+                                                originalPrice: String(Number(newSizeState.originalPrice || 0))
+                                            };
+
+                                            if (editingSizeIndex !== -1) {
+                                                // Update existing
+                                                const newSizes = [...formData.sizes];
+                                                newSizes[editingSizeIndex] = newSizeObj;
+                                                setFormData({ ...formData, sizes: newSizes });
+                                                setEditingSizeIndex(-1);
+                                            } else {
+                                                // Add new
+                                                setFormData({
+                                                    ...formData,
+                                                    sizes: [...formData.sizes, newSizeObj]
+                                                });
+                                            }
                                             setNewSizeState({ size: '', price: '', originalPrice: '' });
                                         }}
-                                        style={{ background: 'var(--color-gold)', color: '#000', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                        style={{
+                                            background: editingSizeIndex !== -1 ? '#4CAF50' : 'var(--color-gold)',
+                                            color: editingSizeIndex !== -1 ? '#fff' : '#000',
+                                            border: 'none',
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold'
+                                        }}
                                     >
-                                        إضافة +
+                                        {editingSizeIndex !== -1 ? 'تحديث ✓' : 'إضافة +'}
                                     </button>
                                 </div>
                             </div>
