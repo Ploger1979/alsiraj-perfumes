@@ -37,10 +37,43 @@ export async function POST(request: Request) {
         }
 
         // 3. Update standard fields
+        // 3. Update standard fields
         product.name = data.name;
         product.description = data.description;
-        product.image = data.image;
-        product.images = data.images;
+
+        // =========================================================================================
+        // 🖼️ SMART IMAGE HANDLING (نظام الصور الذكي)
+        // =========================================================================================
+        // 1. نتأكد أن مصفوفة الصور موجودة
+        if (!product.images) product.images = [];
+
+        // 2. نحفظ الصورة الرئيسية الحالية في الألبوم قبل أي تعديل
+        if (product.image && !product.images.includes(product.image)) {
+            product.images.push(product.image);
+        }
+
+        // 3. إذا قام الأدمن برفع صورة جديدة
+        if (data.image) {
+            // إذا كان المنتج بدون صورة، نضعها كصورة رئيسية
+            if (!product.image) {
+                product.image = data.image;
+            }
+            // نضيف الصورة الجديدة للألبوم دائماً
+            if (!product.images.includes(data.image)) {
+                product.images.push(data.image);
+            }
+        }
+
+        // 4. دمج مصفوفة الصور إذا تم إرسالها بالكامل
+        if (data.images && Array.isArray(data.images)) {
+            data.images.forEach((img: string) => {
+                if (!product.images.includes(img)) {
+                    product.images.push(img);
+                }
+            });
+        }
+        // =========================================================================================
+
         product.category = data.category;
         product.gender = data.gender;
         product.concentration = data.concentration;
@@ -53,65 +86,17 @@ export async function POST(request: Request) {
         product.price = newPrice;
         product.originalPrice = newOriginalPrice;
 
-        // 5. Market-Based Smart Pricing (Power Law Scaling)
-        // Logic: 
-        // 1. Identify valid size selected by Admin (Anchor).
-        // 2. Scale other sizes using a "Perfume Market Curve" (approx exponent 0.8).
-        //    This means doubling volume doesn't double price (e.g. 100ml is ~1.7x price of 50ml, not 2x).
-        if (product.sizes && product.sizes.length > 0 && newPrice > 0) {
-
-            // Helper to parse size volume (e.g. "50 ml" -> 50)
-            const parseSize = (s: string) => {
-                const flt = parseFloat(s.replace(/[^0-9.]/g, ''));
-                return isNaN(flt) ? 0 : flt;
-            };
-
-            // 1. Determine the "Anchor" Size (The one the admin just edited)
-            // We look for a size matching `data.size`. 
-            // If not found, fall back to the first available size or the medium one.
-            const anchorSizeLabel = data.size || product.size || product.sizes[0].size;
-            const anchorVolume = parseSize(anchorSizeLabel);
-
-            // 2. Identify the Anchor Price (The price the admin just typed)
-            const anchorPrice = newPrice;
-            const anchorOriginalPrice = isOffer ? newOriginalPrice : 0;
-
-            if (anchorVolume > 0) {
-                product.sizes = product.sizes.map((s: any) => {
-                    const currentVol = parseSize(s.size);
-
-                    // Safety check
-                    if (currentVol <= 0) return s;
-
-                    // If this is the Anchor Size, set it exactly to what admin typed
-                    if (Math.abs(currentVol - anchorVolume) < 0.1) {
-                        return {
-                            ...s,
-                            price: anchorPrice,
-                            originalPrice: anchorOriginalPrice
-                        };
-                    }
-
-                    // For other sizes, calculate based on Market Curve
-                    // Formula: P2 = P1 * (V2 / V1) ^ 0.8
-                    // The 0.8 exponent creates the "discount" curve (standard in perfume industry)
-                    const ratio = currentVol / anchorVolume;
-                    const scaleFactor = Math.pow(ratio, 0.8);
-
-                    const calculatedPrice = Math.ceil((anchorPrice * scaleFactor) / 250) * 250;
-
-                    let calculatedOriginalPrice = 0;
-                    if (anchorOriginalPrice > 0) {
-                        calculatedOriginalPrice = Math.ceil((anchorOriginalPrice * scaleFactor) / 250) * 250;
-                    }
-
-                    return {
-                        ...s,
-                        price: calculatedPrice,
-                        originalPrice: calculatedOriginalPrice
-                    };
-                });
-            }
+        // =========================================================================================
+        // 💰 MANUAL PRICING (التسعير اليدوي)
+        // =========================================================================================
+        // هنا نقوم بحفظ قائمة الأحجام كما هي بالضبط من المدخلات.
+        // لا توجد أي معادلات رياضية أو تغيير تلقائي للأسعار.
+        if (data.sizes && Array.isArray(data.sizes)) {
+            product.sizes = data.sizes.map((s: any) => ({
+                size: s.size,
+                price: Number(s.price),
+                originalPrice: Number(s.originalPrice || 0)
+            }));
         }
 
         // 6. Save changes

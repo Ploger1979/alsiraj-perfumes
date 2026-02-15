@@ -53,12 +53,16 @@ export default function AdminDashboard() {
         category: 'men',
         gender: 'رجالي',
         concentration: 'Eau de Toilette',
-        size: '100ml',
+        size: '',
         isFeatured: false,
         isOffer: false,
         salePrice: '',
-        images: [] as string[]
+        images: [] as string[],
+        sizes: [] as { size: string; price: string; originalPrice: string }[]
     });
+
+    // State for the "Add New Size" local form
+    const [newSizeState, setNewSizeState] = useState({ size: '', price: '', originalPrice: '' });
 
     useEffect(() => {
         // التحقق من صلاحية الدخول
@@ -88,10 +92,27 @@ export default function AdminDashboard() {
     };
 
     const handleEdit = (product: any) => {
+        // Prepare sizes: use existing sizes or create one from root data
+        let initialSizes = [];
+        if (product.sizes && product.sizes.length > 0) {
+            initialSizes = product.sizes.map((s: any) => ({
+                size: s.size,
+                price: s.price,
+                originalPrice: s.originalPrice || ''
+            }));
+        } else {
+            // Legacy fallback
+            initialSizes.push({
+                size: product.size || '100ml',
+                price: product.price, // Assuming this is the final selling price
+                originalPrice: product.isOffer ? (product.originalPrice || '') : ''
+            });
+        }
+
         setFormData({
             name: product.name,
             description: product.description || '',
-            price: product.isOffer && product.originalPrice ? product.originalPrice : product.price,
+            price: product.price,
             image: product.image,
             category: product.category,
             gender: product.gender,
@@ -100,7 +121,8 @@ export default function AdminDashboard() {
             isFeatured: product.isFeatured || false,
             isOffer: product.isOffer || false,
             salePrice: product.isOffer ? product.price : '',
-            images: product.images || [product.image]
+            images: product.images || [product.image],
+            sizes: initialSizes
         });
         setEditingId(product.id);
         setActiveTab('add'); // Switch to form
@@ -120,7 +142,10 @@ export default function AdminDashboard() {
             isFeatured: false,
             isOffer: false,
             salePrice: '',
-            images: []
+            images: [],
+            sizes: [
+                { size: '100ml', price: '', originalPrice: '' }
+            ]
         });
         setEditingId(null);
     };
@@ -151,8 +176,29 @@ export default function AdminDashboard() {
         setLoading(true);
         setMessage('');
 
+        // التحقق من وجود حجم واحد على الأقل
+        if (formData.sizes.length === 0) {
+            setMessage('يجب إضافة حجم واحد على الأقل مع السعر ⚠️');
+            setLoading(false);
+            return;
+        }
+
         const endpoint = editingId ? '/api/admin/edit-product' : '/api/admin/add-product';
-        const bodyContent = editingId ? { ...formData, id: editingId } : formData;
+
+        // استخدام الحجم الأول كواجهة للمنتج في القوائم
+        const primarySize = formData.sizes[0];
+        const isOffer = Number(primarySize.originalPrice) > Number(primarySize.price);
+
+        const bodyContent: any = {
+            ...formData,
+            price: primarySize.price,
+            originalPrice: primarySize.originalPrice || 0,
+            salePrice: primarySize.price, // For consistency if used elsewhere
+            isOffer: isOffer,
+            size: primarySize.size,
+        };
+
+        if (editingId) bodyContent.id = editingId;
 
         try {
             const res = await fetch(endpoint, {
@@ -167,7 +213,7 @@ export default function AdminDashboard() {
 
             if (res.ok) {
                 setMessage(editingId ? 'تم تحديث المنتج بنجاح! ✅' : 'تم إضافة المنتج بنجاح! 🎉');
-                resetForm();
+                if (!editingId) resetForm(); // Only reset on add
             } else {
                 setMessage(`حدث خطأ: ${data.error}`);
             }
@@ -301,51 +347,91 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* السعر والصورة */}
-                    {/* السعر */}
+                    {/* ========================================================================================= */}
+                    {/* 📏 SIZE MANAGER (مدير الأحجام والأسعار) */}
+                    {/* ========================================================================================= */}
+                    {/* هذا القسم الجديد يتيح للمدير إضافة عدة أحجام للمنتج (مثلاً 50ml, 100ml). */}
+                    {/* لكل حجم، يمكن تحديد السعر، والسعر الأصلي (للخصم). */}
+                    {/* البيانات هنا تُخزن في مصفوفة `sizes` وترسل للباك-إند عند الحفظ. */}
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>السعر (دينار عراقي)</label>
-                        <input
-                            type="number"
-                            required
-                            value={formData.price}
-                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                            placeholder="مثال: 150000"
-                        />
-                    </div>
+                        <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: 'bold' }}>الأحجام والأسعار (Sizes & Prices)</label>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                                {formData.sizes && formData.sizes.map((s, idx) => (
+                                    <div key={idx} style={{
+                                        display: 'flex', alignItems: 'center', gap: '1rem',
+                                        padding: '0.8rem', background: '#222', borderRadius: '8px', border: '1px solid #333'
+                                    }}>
+                                        <div style={{ flex: 1, fontWeight: 'bold', color: 'var(--color-gold)' }}>{s.size}</div>
+                                        <div style={{ flex: 2 }}>
+                                            <span style={{ color: '#aaa', fontSize: '0.8rem' }}>السعر: </span>
+                                            {Number(s.price).toLocaleString()} د.ع
+                                        </div>
+                                        {Number(s.originalPrice) > 0 && (
+                                            <div style={{ flex: 2, textDecoration: 'line-through', color: '#666' }}>
+                                                {Number(s.originalPrice).toLocaleString()} د.ع
+                                            </div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newSizes = [...formData.sizes];
+                                                newSizes.splice(idx, 1);
+                                                setFormData({ ...formData, sizes: newSizes });
+                                            }}
+                                            style={{ background: 'rgba(255,0,0,0.1)', color: 'red', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                                        >
+                                            حذف 🗑️
+                                        </button>
+                                    </div>
+                                ))}
 
-                    {/* خيار العرض (اختياري) */}
-                    <div style={{ background: '#f9f9f9', padding: '1rem', borderRadius: '8px', border: '1px dashed #ccc' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: formData.isOffer ? '1rem' : '0' }}>
-                            <input
-                                type="checkbox"
-                                id="isOffer"
-                                checked={formData.isOffer}
-                                onChange={(e) => setFormData({ ...formData, isOffer: e.target.checked })}
-                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                            />
-                            <label htmlFor="isOffer" style={{ fontWeight: 'bold', cursor: 'pointer', color: formData.isOffer ? 'var(--color-gold)' : '#333' }}>
-                                تفعيل هذا المنتج كعرض خاص (Sale) 🔥
-                            </label>
-                        </div>
-
-                        {formData.isOffer && (
-                            <div className="animate-fade-in">
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'red' }}>سعر العرض (بعد الخصم)</label>
-                                <input
-                                    type="number"
-                                    required={formData.isOffer}
-                                    value={formData.salePrice}
-                                    onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })}
-                                    style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid red' }}
-                                    placeholder="أدخل السعر الجديد المخفض..."
-                                />
-                                <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px' }}>
-                                    * سيظهر السعر القديم ({formData.price || '...'}) مشطوباً، وسيتم اعتماد هذا السعر الجديد للبيع.
-                                </p>
+                                {/* Form for adding new size inline */}
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px dashed #444' }}>
+                                    <input
+                                        placeholder="الحجم (مثلاً: 50ml)"
+                                        value={newSizeState.size}
+                                        onChange={(e) => setNewSizeState({ ...newSizeState, size: e.target.value })}
+                                        style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', background: '#333', border: '1px solid #555', color: '#fff' }}
+                                    />
+                                    <input
+                                        type="number"
+                                        placeholder="السعر"
+                                        value={newSizeState.price}
+                                        onChange={(e) => setNewSizeState({ ...newSizeState, price: e.target.value })}
+                                        style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', background: '#333', border: '1px solid #555', color: '#fff' }}
+                                    />
+                                    <input
+                                        type="number"
+                                        placeholder="السعر قبل الخصم (اختياري)"
+                                        value={newSizeState.originalPrice}
+                                        onChange={(e) => setNewSizeState({ ...newSizeState, originalPrice: e.target.value })}
+                                        style={{ flex: 1, padding: '0.5rem', borderRadius: '4px', background: '#333', border: '1px solid #555', color: '#fff' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (!newSizeState.size || !newSizeState.price) return alert('الرجاء إدخال الحجم والسعر');
+                                            setFormData({
+                                                ...formData,
+                                                sizes: [...formData.sizes, {
+                                                    size: newSizeState.size,
+                                                    price: Number(newSizeState.price),
+                                                    originalPrice: Number(newSizeState.originalPrice || 0)
+                                                }]
+                                            });
+                                            setNewSizeState({ size: '', price: '', originalPrice: '' });
+                                        }}
+                                        style={{ background: 'var(--color-gold)', color: '#000', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                        إضافة +
+                                    </button>
+                                </div>
                             </div>
-                        )}
+                        </div>
                     </div>
+
+
 
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>صورة المنتج</label>
@@ -484,38 +570,7 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        {/* الحجم */}
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>الحجم (Size)</label>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                {['50ml', '100ml', '150ml'].map((size) => (
-                                    <button
-                                        key={size}
-                                        type="button"
-                                        onClick={() => setFormData({ ...formData, size })}
-                                        style={{
-                                            padding: '0.5rem 1rem',
-                                            borderRadius: '20px',
-                                            border: formData.size === size ? '2px solid var(--color-gold)' : '1px solid #666',
-                                            background: formData.size === size ? 'var(--color-gold)' : 'transparent',
-                                            color: formData.size === size ? '#000' : 'var(--foreground)',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s'
-                                        }}
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
-                            </div>
-                            {/* إدخال مخصص للحجم إذا لزم الأمر */}
-                            <input
-                                type="text"
-                                value={formData.size}
-                                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-                                placeholder="أو اكتب الحجم يدوياً..."
-                                style={{ marginTop: '0.5rem', width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #444', background: 'transparent', color: 'var(--foreground)' }}
-                            />
-                        </div>
+
                     </div>
 
 

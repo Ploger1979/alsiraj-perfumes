@@ -104,7 +104,7 @@ export default function CartDrawer() {
                         <button
                             className={styles.checkoutBtn}
                             onClick={() => {
-                                const phoneNumber = "4915735435630";
+                                const phoneNumber = "9647735856711";
                                 const locationLabel = deliveryType === 'baghdad' ? 'داخل بغداد' : 'محافظات';
 
                                 let message = "مرحباً، أود إتمام الطلب التالي:\n\n";

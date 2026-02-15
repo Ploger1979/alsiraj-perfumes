@@ -16,17 +16,24 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const { addToCart } = useCart();
     const router = useRouter();
 
-    // Display sizes directly from product data
-    // The backend now handles smart pricing updates when admin changes the main price.
+    // =========================================================================================
+    // 🛍️ PRODUCT DISPLAY LOGIC (منطق عرض المنتج)
+    // =========================================================================================
+
+    // 1️⃣ استرجاع الأحجام (Get Sizes)
+    // نعرض الأحجام المخزنة مباشرة في `product.sizes`.
+    // تم إلغاء التسعير التلقائي، لذا نعتمد على البيانات المخزنة يدوياً من الأدمن.
     const displaySizes = product.sizes;
 
 
-    // حالة الحجم المختار: نبدأ بأول حجم متاح إذا وجد، وإلا نتركه فارغاً
+    // 2️⃣ الحالة الأولية (Initial State)
+    // - الحجم المختار: نبدأ بأول حجم في القائمة تلقائياً.
     const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
         displaySizes && displaySizes.length > 0 ? displaySizes[0] : undefined
     );
 
-    // حالة الصورة المختارة: نبدأ بالصورة الرئيسية للمنتج
+    // - الصورة المختارة: نبدأ بالصورة الرئيسية للمنتج.
+    // يتم تحديث هذه الحالة عند النقر على أسهم التنقل (Slideshow).
     const [selectedImage, setSelectedImage] = useState<string>(product.image);
 
     // حالة نوع التوصيل: الافتراضي داخل بغداد
@@ -56,6 +63,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             <div className={`container ${styles.productWrapper}`}>
                 {/* Image Section */}
                 <div className={styles.imageSection}>
+                    {/* 
+                      🖼️ SLIDESHOW LOGIC (منطق عرض الصور المتعددة)
+                      - إذا كان هناك أكثر من صورة في `product.images`، نعرض أسهم التنقل.
+                      - الزر الأيمن والأيسر يقومان بتغيير `selectedImage` من المصفوفة.
+                    */}
                     <div className={styles.mainImageContainer} style={{ position: 'relative' }}>
                         {product.images && product.images.length > 1 && (
                             <button
@@ -137,7 +149,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
 
 
-                    {/* Size Selection */}
+                    {/* 
+                       📏 SIZE SELECTION (اختيار الحجم)
+                       - نعرض قائمة بالأحجام المتاحة `displaySizes`.
+                       - عند النقر على حجم، نحدث `selectedSize`.
+                       - نعرض السعر (والسعر قبل الخصم) الخاص بكل حجم.
+                    */}
                     {displaySizes && displaySizes.length > 0 && (
                         <div className={styles.sizeSelection}>
                             {displaySizes.map((sizeOption, index) => (
@@ -250,7 +267,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
                                 message += "\nيرجى تأكيد الطلب وتزويدي بموعد الاستلام.";
 
-                                const url = `https://wa.me/4915735435630?text=${encodeURIComponent(message)}`;
+                                const url = `https://wa.me/9647735856711?text=${encodeURIComponent(message)}`;
                                 window.open(url, '_blank');
                             }}
                             className={styles.whatsappBtn}

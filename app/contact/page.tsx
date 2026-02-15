@@ -29,7 +29,7 @@ export default function ContactPage() {
               <strong>البريد الإلكتروني:</strong> info@alsiraj-perfumes.com
             </p>
             <p style={{ marginBottom: "0.5rem" }}>
-              <strong>الهاتف:</strong> +49 157 3543 5630
+              <strong>الهاتف:</strong> +964 773 585 6711
             </p>
             <p>
               <strong>العنوان:</strong>
