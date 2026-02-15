@@ -392,42 +392,6 @@ export default function AdminDashboard() {
                                         display: 'flex', alignItems: 'center', gap: '1rem',
                                         padding: '0.8rem', background: '#222', borderRadius: '8px', border: '1px solid #333'
                                     }}>
-                                        {/* Move Buttons */}
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <button
-                                                type="button"
-                                                disabled={idx === 0}
-                                                onClick={() => {
-                                                    if (idx === 0) return;
-                                                    const newSizes = [...formData.sizes];
-                                                    [newSizes[idx - 1], newSizes[idx]] = [newSizes[idx], newSizes[idx - 1]];
-                                                    setFormData({ ...formData, sizes: newSizes });
-                                                }}
-                                                style={{
-                                                    background: 'none', border: 'none', color: idx === 0 ? '#555' : '#aaa',
-                                                    cursor: idx === 0 ? 'default' : 'pointer', fontSize: '0.8rem', padding: 0
-                                                }}
-                                            >
-                                                ▲
-                                            </button>
-                                            <button
-                                                type="button"
-                                                disabled={idx === formData.sizes.length - 1}
-                                                onClick={() => {
-                                                    if (idx === formData.sizes.length - 1) return;
-                                                    const newSizes = [...formData.sizes];
-                                                    [newSizes[idx + 1], newSizes[idx]] = [newSizes[idx], newSizes[idx + 1]];
-                                                    setFormData({ ...formData, sizes: newSizes });
-                                                }}
-                                                style={{
-                                                    background: 'none', border: 'none', color: idx === formData.sizes.length - 1 ? '#555' : '#aaa',
-                                                    cursor: idx === formData.sizes.length - 1 ? 'default' : 'pointer', fontSize: '0.8rem', padding: 0
-                                                }}
-                                            >
-                                                ▼
-                                            </button>
-                                        </div>
-
                                         <div style={{ flex: 1, fontWeight: 'bold', color: 'var(--color-gold)' }}>{s.size}</div>
                                         <div style={{ flex: 2 }}>
                                             <span style={{ color: '#aaa', fontSize: '0.8rem' }}>السعر: </span>
