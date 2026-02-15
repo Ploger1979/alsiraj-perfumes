@@ -357,7 +357,34 @@ export default function AdminDashboard() {
                     {/* لكل حجم، يمكن تحديد السعر، والسعر الأصلي (للخصم). */}
                     {/* البيانات هنا تُخزن في مصفوفة `sizes` وترسل للباك-إند عند الحفظ. */}
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: 'bold' }}>الأحجام والأسعار (Sizes & Prices)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>الأحجام والأسعار (Sizes & Prices)</label>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const sorted = [...formData.sizes].sort((a, b) => {
+                                        const getVol = (s: string) => {
+                                            const match = s.match(/(\d+(\.\d+)?)/);
+                                            return match ? parseFloat(match[0]) : 0;
+                                        };
+                                        return getVol(a.size) - getVol(b.size);
+                                    });
+                                    setFormData({ ...formData, sizes: sorted });
+                                }}
+                                style={{
+                                    fontSize: '0.8rem',
+                                    padding: '5px 10px',
+                                    background: 'rgba(212, 175, 55, 0.1)',
+                                    color: 'var(--color-gold)',
+                                    border: '1px solid var(--color-gold)',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                ترتيب ذكي (حسب الحجم) 🪄
+                            </button>
+                        </div>
+
                         <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem' }}>
                                 {formData.sizes && formData.sizes.map((s, idx) => (
@@ -365,6 +392,42 @@ export default function AdminDashboard() {
                                         display: 'flex', alignItems: 'center', gap: '1rem',
                                         padding: '0.8rem', background: '#222', borderRadius: '8px', border: '1px solid #333'
                                     }}>
+                                        {/* Move Buttons */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                            <button
+                                                type="button"
+                                                disabled={idx === 0}
+                                                onClick={() => {
+                                                    if (idx === 0) return;
+                                                    const newSizes = [...formData.sizes];
+                                                    [newSizes[idx - 1], newSizes[idx]] = [newSizes[idx], newSizes[idx - 1]];
+                                                    setFormData({ ...formData, sizes: newSizes });
+                                                }}
+                                                style={{
+                                                    background: 'none', border: 'none', color: idx === 0 ? '#555' : '#aaa',
+                                                    cursor: idx === 0 ? 'default' : 'pointer', fontSize: '0.8rem', padding: 0
+                                                }}
+                                            >
+                                                ▲
+                                            </button>
+                                            <button
+                                                type="button"
+                                                disabled={idx === formData.sizes.length - 1}
+                                                onClick={() => {
+                                                    if (idx === formData.sizes.length - 1) return;
+                                                    const newSizes = [...formData.sizes];
+                                                    [newSizes[idx + 1], newSizes[idx]] = [newSizes[idx], newSizes[idx + 1]];
+                                                    setFormData({ ...formData, sizes: newSizes });
+                                                }}
+                                                style={{
+                                                    background: 'none', border: 'none', color: idx === formData.sizes.length - 1 ? '#555' : '#aaa',
+                                                    cursor: idx === formData.sizes.length - 1 ? 'default' : 'pointer', fontSize: '0.8rem', padding: 0
+                                                }}
+                                            >
+                                                ▼
+                                            </button>
+                                        </div>
+
                                         <div style={{ flex: 1, fontWeight: 'bold', color: 'var(--color-gold)' }}>{s.size}</div>
                                         <div style={{ flex: 2 }}>
                                             <span style={{ color: '#aaa', fontSize: '0.8rem' }}>السعر: </span>
