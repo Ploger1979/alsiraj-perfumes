@@ -633,9 +633,9 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productsList.map((product) => (
+                                {productsList.map((product, index) => (
                                     <tr key={product.id}>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.id}</td>
+                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{index + 1}</td>
                                         <td style={{ padding: '10px', border: '1px solid #ddd' }}>
                                             <img src={product.image} alt={product.name} width={50} height={50} style={{ objectFit: 'contain' }} />
                                         </td>
