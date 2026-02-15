@@ -62,12 +62,7 @@ export default function Navbar() {
                             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
                     )}
-                    <button
-                        className={styles.iconButton}
-                        onClick={() => setIsSearchOpen(true)}
-                    >
-                        <Search size={20} />
-                    </button>
+
                     {/* أيقونة السلة مع عداد المنتجات */}
                     <button
                         className={styles.cartIcon}
