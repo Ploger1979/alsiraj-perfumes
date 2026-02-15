@@ -416,8 +416,8 @@ export default function AdminDashboard() {
                                                 ...formData,
                                                 sizes: [...formData.sizes, {
                                                     size: newSizeState.size,
-                                                    price: Number(newSizeState.price),
-                                                    originalPrice: Number(newSizeState.originalPrice || 0)
+                                                    price: String(Number(newSizeState.price)),
+                                                    originalPrice: String(Number(newSizeState.originalPrice || 0))
                                                 }]
                                             });
                                             setNewSizeState({ size: '', price: '', originalPrice: '' });
