@@ -37,7 +37,12 @@ async function dbConnect() {
             bufferCommands: false,
         };
 
-        cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+        console.log('🔌 MongoDB Connecting...');
+        const uri = MONGODB_URI!;
+        console.log('   URI:', uri.replace(/:([^:@]+)@/, ':****@')); // Mask password
+
+        cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
+            console.log('✅ MongoDB Connected Successfully!');
             return mongoose;
         });
     }
