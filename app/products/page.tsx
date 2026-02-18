@@ -20,8 +20,12 @@ export default async function ProductsPage() {
 
     products = JSON.parse(JSON.stringify(products));
 
+    // Determine source
+    const isUsingStaticData = !products || products.length === 0 || (products[0] as any).id === 1; // Assuming static data has specific ID logic or just relying on the flag
+
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>
+            {/* DEBUG INFO: Source = {isUsingStaticData ? 'STATIC_FILE (Fallback)' : 'MONGODB_DATABASE (Live)'} */}
             <br />
             <br />
             <br />
