@@ -1,7 +1,14 @@
 
 const mongoose = require('mongoose');
 
-const MONGODB_URI = "mongodb+srv://alsiraj_admin-Ayman:alsiraj_admin1979!@alsirajdb.cbnhoqo.mongodb.net/alsiraj-perfumes?retryWrites=true&w=majority&appName=AlsirajDB";
+require('dotenv').config({ path: '.env.local' });
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    console.error('❌ MONGODB_URI is not defined in .env.local');
+    process.exit(1);
+}
 
 console.log('--- DB Verification ---');
 

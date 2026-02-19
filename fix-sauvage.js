@@ -1,7 +1,14 @@
 
 const mongoose = require('mongoose');
 
-const MONGO_URI = 'mongodb+srv://zusammen:Berlin2026@al-raha-db.vg5sa6r.mongodb.net/alsiraj-perfumes?retryWrites=true&w=majority';
+require('dotenv').config({ path: '.env.local' });
+
+const MONGO_URI = process.env.MONGODB_URI;
+
+if (!MONGO_URI) {
+    console.error('❌ MONGODB_URI is not defined in .env.local');
+    process.exit(1);
+}
 
 const productSchema = new mongoose.Schema({
     name: String,
