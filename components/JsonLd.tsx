@@ -5,9 +5,9 @@ export default function JsonLd() {
         "name": "السراج للعطور | Alsiraj Perfumes",
         "image": "https://alsiraj-perfumes.com/alsiraj-cover.png",
         "logo": "https://alsiraj-perfumes.com/logo-og.png",
-        "description": "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور الفرنسية والشرقية، زيوت عطرية فاخرة، وعطور النيش.",
+        "description": "اكتشف عالم الفخامة مع السراج للعطور. نقدم أرقى العطور العالمية والشرقية، زيوت عطرية فاخرة، وعطور النيش.",
         "url": "https://alsiraj-perfumes.com",
-        "telephone": "+9647735856711",
+        "telephone": "+9647749191691",
         "email": "info@alsiraj-perfumes.com",
         "address": {
             "@type": "PostalAddress",

@@ -12,11 +12,12 @@ export const dynamic = 'force-dynamic';
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
     const { category } = await params;
 
-    const categoryName = category === "french" ? "عطور فرنسية" :
+    const categoryName = category === "french" ? "ماركات عالمية" :
         category === "oils" ? "زيوت عطرية" :
             category === "men" ? "مجموعة الرجال" :
                 category === "women" ? "مجموعة النساء" :
-                    category === "eau-de-toilette" ? "Eau de Toilette" : category;
+                    category === "unisex" ? "يونيسكس" :
+                        category === "eau-de-toilette" ? "تيستيرات" : category;
 
     await dbConnect();
 
@@ -31,9 +32,43 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     // Convert to plain JSON to avoid serialization issues
     const safeProducts = JSON.parse(JSON.stringify(allProducts));
 
-    const categoryProducts = category === "eau-de-toilette"
-        ? safeProducts.filter((p: any) => p.concentration === "Eau de Toilette")
-        : safeProducts.filter((p: any) => p.category === category);
+    // ===================================================
+    // 🔍 منطق الفلترة الذكي حسب التصنيف
+    // ===================================================
+    const categoryProducts = (() => {
+        switch (category) {
+            // تيستيرات = Eau de Toilette أو Tester (كلاهما نفس التصنيف)
+            case "eau-de-toilette":
+                return safeProducts.filter((p: any) =>
+                    p.concentration === "Eau de Toilette" || p.concentration === "Tester"
+                );
+            // ماركات عالمية = كل المنتجات
+            case "french":
+                return safeProducts;
+            // زيوت
+            case "oils":
+                return safeProducts.filter((p: any) =>
+                    p.category === "oils" || p.concentration === "Oil"
+                );
+            // رجالي
+            case "men":
+                return safeProducts.filter((p: any) =>
+                    p.gender === "رجالي" || p.gender === "men"
+                );
+            // نسائي
+            case "women":
+                return safeProducts.filter((p: any) =>
+                    p.gender === "نسائي" || p.gender === "women"
+                );
+            // يونيسكس
+            case "unisex":
+                return safeProducts.filter((p: any) =>
+                    p.gender === "للجنسين" || p.gender === "unisex" || p.gender === "Unisex"
+                );
+            default:
+                return safeProducts.filter((p: any) => p.category === category);
+        }
+    })();
 
     return (
         <div className="container" style={{ padding: "4rem 1.5rem" }}>

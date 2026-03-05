@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2, UserPlus, Shield } from 'lucide-react';
+import Cookies from 'js-cookie';
 
 export default function UsersManagement() {
     const router = useRouter();
@@ -15,6 +16,21 @@ export default function UsersManagement() {
     const [success, setSuccess] = useState('');
 
     useEffect(() => {
+        // 🔒 التحقق من الصلاحيات - فقط superadmin يدخل هنا
+        const auth = Cookies.get('auth');
+        const role = Cookies.get('role');
+
+        if (!auth) {
+            router.replace('/admin');
+            return;
+        }
+
+        if (role !== 'superadmin') {
+            // الأدمن العادي لا يملك صلاحية الدخول لهذه الصفحة
+            router.replace('/admin/dashboard');
+            return;
+        }
+
         fetchUsers();
     }, []);
 
@@ -54,7 +70,7 @@ export default function UsersManagement() {
                 setSuccess('تم إضافة المشرف بنجاح');
                 setUsername('');
                 setPassword('');
-                fetchUsers(); // Refresh list
+                fetchUsers();
             } else {
                 setError(data.error || 'حدث خطأ');
             }
@@ -165,32 +181,38 @@ export default function UsersManagement() {
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     padding: '1rem',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    borderRadius: '8px'
+                                    background: user.role === 'superadmin' ? 'rgba(201,168,76,0.1)' : 'rgba(255,255,255,0.05)',
+                                    borderRadius: '8px',
+                                    border: user.role === 'superadmin' ? '1px solid rgba(201,168,76,0.3)' : 'none'
                                 }}>
                                     <div>
-                                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{user.username}</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                                            {user.role === 'superadmin' ? '👑 ' : '🔑 '}{user.username}
+                                        </div>
                                         <div style={{ fontSize: '0.85rem', color: '#888' }}>
                                             تاريخ الإضافة: {new Date(user.createdAt).toLocaleDateString('ar-EG')}
                                         </div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--color-gold)', marginTop: '4px' }}>
-                                            {user.role}
+                                        <div style={{ fontSize: '0.8rem', color: user.role === 'superadmin' ? 'var(--color-gold)' : '#aaa', marginTop: '4px' }}>
+                                            {user.role === 'superadmin' ? 'مدير عام' : 'مشرف'}
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={() => handleDeleteUser(user._id, user.username)}
-                                        style={{
-                                            background: 'none',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            color: '#ff4444',
-                                            padding: '8px'
-                                        }}
-                                        title="حذف المشرف"
-                                    >
-                                        <Trash2 size={20} />
-                                    </button>
+                                    {/* لا يظهر زرار الحذف لـ superadmin */}
+                                    {user.role !== 'superadmin' && (
+                                        <button
+                                            onClick={() => handleDeleteUser(user._id, user.username)}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                color: '#ff4444',
+                                                padding: '8px'
+                                            }}
+                                            title="حذف المشرف"
+                                        >
+                                            <Trash2 size={20} />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                             {users.length === 0 && <p style={{ color: '#888' }}>لا يوجد مشرفين</p>}

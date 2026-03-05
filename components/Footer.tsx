@@ -11,9 +11,12 @@ export default function Footer() {
                     <div className={styles.grid}>
                         {/* Brand */}
                         <div className={styles.brand}>
-                            <h3>السراج للعطور</h3>
+                            <h3>شركة السراج للعطور</h3>
+                            <p style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--color-gold, #c9a84c)' }}>
+                                الموزع الرسمي لوكلاء العراق
+                            </p>
                             <p>
-                                اكتشف جوهر الفخامة مع مجموعتنا المتميزة<br /> من العطور الفرنسية والزيوت الأصلية.
+                                اكتشف جوهر الفخامة مع مجموعتنا المتميزة<br /> من العطور العالميه والزيوت الأصلية.
                             </p>
                         </div>
 
@@ -21,6 +24,7 @@ export default function Footer() {
                         <div className={styles.column}>
                             <h4>روابط سريعة</h4>
                             <ul>
+                                <li><Link href="/">الرئيسية</Link></li>
                                 <li><Link href="/products">جميع المنتجات</Link></li>
                                 <li><Link href="/products/offers">عروض خاصة</Link></li>
                                 <li><Link href="/about">من نحن</Link></li>
@@ -32,10 +36,12 @@ export default function Footer() {
                         <div className={styles.column}>
                             <h4>المجموعات</h4>
                             <ul>
-                                <li><Link href="/products/perfumes/french">عطور فرنسية</Link></li>
-                                <li><Link href="/products/perfumes/oils">زيوت عطرية</Link></li>
+                                <li><Link href="/products/perfumes/french">ماركات عالمية</Link></li>
+                                <li><Link href="/products/perfumes/eau-de-toilette">تيستيرات (Testers)</Link></li>
                                 <li><Link href="/products/perfumes/men">مجموعة الرجال</Link></li>
                                 <li><Link href="/products/perfumes/women">مجموعة النساء</Link></li>
+                                <li><Link href="/products/perfumes/unisex">مجموعة اليونيسكس</Link></li>
+                                <li><Link href="/products/perfumes/oils">زيوت عطرية</Link></li>
                             </ul>
                         </div>
 
@@ -61,7 +67,7 @@ export default function Footer() {
                                         <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
                                     </svg>
                                 </a>
-                                <a href="https://wa.me/9647735856711" target="_blank" rel="noopener noreferrer" className={`${styles.socialIcon} ${styles.whatsapp}`} aria-label="WhatsApp">
+                                <a href="https://wa.me/9647749191691" target="_blank" rel="noopener noreferrer" className={`${styles.socialIcon} ${styles.whatsapp}`} aria-label="WhatsApp">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="20"
@@ -83,20 +89,31 @@ export default function Footer() {
 
                     {/* حقوق النشر */}
                     <div className={styles.copyright}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                            <p>
-                                &copy; {new Date().getFullYear()} السراج للعطور. جميع الحقوق محفوظة.
-                            </p>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '12px',
+                            background: 'rgba(212, 175, 55, 0.03)',
+                            padding: '0.8rem 2rem',
+                            borderRadius: '50px',
+                            width: 'fit-content',
+                            margin: '0 auto',
+                            border: '1px solid rgba(212, 175, 55, 0.08)'
+                        }}>
                             <img
                                 src="/logo-ohne-bg.png"
                                 alt="Alsiraj Logo"
                                 style={{
-                                    height: '40px',
+                                    height: '32px',
                                     width: 'auto',
-                                    filter: 'var(--logo-filter)', // Use theme-aware filter
-                                    opacity: 0.9
+                                    filter: 'var(--logo-filter)',
+                                    opacity: 0.8
                                 }}
                             />
+                            <p style={{ margin: 0 }}>
+                                &copy; {new Date().getFullYear()} السراج للعطور. جميع الحقوق محفوظة.
+                            </p>
                         </div>
                     </div>
                 </div>

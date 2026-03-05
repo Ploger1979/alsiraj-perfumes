@@ -36,8 +36,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     // يتم تحديث هذه الحالة عند النقر على أسهم التنقل (Slideshow).
     const [selectedImage, setSelectedImage] = useState<string>(product.image);
 
-    // حالة نوع التوصيل: الافتراضي داخل بغداد
-    const [deliveryType, setDeliveryType] = useState<'baghdad' | 'provinces'>('baghdad');
+    // تكلفة التوصيل الثابتة لجميع المحافظات
 
     // دالة إضافة المنتج للسلة
     const handleAddToCart = () => {
@@ -55,7 +54,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     // حساب السعر الحالي بناءً على الحجم المختار
     const currentPrice = selectedSize ? selectedSize.price : product.price;
 
-    const FREE_SHIPPING_THRESHOLD = 200000;
+    const DELIVERY_COST = 5000;
+    const FREE_SHIPPING_THRESHOLD = 100000; // مجاني فوق 100,000 دينار
     const isFreeShipping = currentPrice >= FREE_SHIPPING_THRESHOLD;
 
     return (
@@ -208,28 +208,15 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                     {/* Delivery & Actions */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
-                        {/* Delivery Selector */}
-                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>موقع التوصيل:</label>
-                            <select
-                                value={deliveryType}
-                                onChange={(e) => setDeliveryType(e.target.value as 'baghdad' | 'provinces')}
-                                style={{
-                                    width: '100%',
-                                    padding: '10px',
-                                    borderRadius: '6px',
-                                    border: '1px solid #444',
-                                    backgroundColor: '#222',
-                                    color: '#fff'
-                                }}
-                            >
-                                <option value="baghdad">
-                                    داخل بغداد ({isFreeShipping ? "مجاني" : "5,000 د.ع"})
-                                </option>
-                                <option value="provinces">
-                                    خارج بغداد / محافظات ({isFreeShipping ? "مجاني" : "8,000 د.ع"})
-                                </option>
-                            </select>
+                        <div style={{ background: 'rgba(212,175,55,0.07)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.2)' }}>
+                            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.95rem' }}>
+                                🚚 التوصيل لجميع المحافظات
+                            </p>
+                            {isFreeShipping && (
+                                <p style={{ margin: '4px 0 0', color: 'var(--color-gold, #c9a84c)', fontSize: '0.9rem' }}>
+                                    ✨ التوصيل مجاني لطلبك!
+                                </p>
+                            )}
                         </div>
 
                         {/* زر الإضافة للسلة */}
@@ -243,31 +230,21 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                                 const price = selectedSize ? selectedSize.price : product.price;
                                 const sizeLabel = selectedSize ? selectedSize.size : (product.size || 'Standard');
 
-                                // Calculate dynamic delivery cost
-                                const baseDeliveryCost = deliveryType === 'baghdad' ? 5000 : 8000;
-                                const deliveryCost = isFreeShipping ? 0 : baseDeliveryCost;
-
-                                const locationLabel = deliveryType === 'baghdad' ? 'داخل بغداد' : 'محافظات';
+                                const deliveryCost = isFreeShipping ? 0 : DELIVERY_COST;
                                 const totalWithDelivery = price + deliveryCost;
 
                                 let message = "مرحباً، أود إتمام الطلب التالي:\n\n";
                                 message += `* ${product.name} (${sizeLabel}): 1 × ${formatCurrency(price)}\n`;
-
                                 message += `\n------------------\n`;
                                 message += `المجموع الفرعي: ${formatCurrency(price)}\n`;
-
-                                if (isFreeShipping) {
-                                    message += `التوصيل (${locationLabel}): مجاني ✨\n`;
-                                } else {
-                                    message += `التوصيل (${locationLabel}): ${formatCurrency(deliveryCost)}\n`;
-                                }
-
+                                message += isFreeShipping
+                                    ? `التوصيل: مجاني ✨\n`
+                                    : `التوصيل لجميع المحافظات: ${formatCurrency(deliveryCost)}\n`;
                                 message += `\n*المجموع الكلي: ${formatCurrency(totalWithDelivery)}*\n`;
                                 message += `------------------\n`;
-
                                 message += "\nيرجى تأكيد الطلب وتزويدي بموعد الاستلام.";
 
-                                const url = `https://wa.me/9647735856711?text=${encodeURIComponent(message)}`;
+                                const url = `https://wa.me/9647749191691?text=${encodeURIComponent(message)}`;
                                 window.open(url, '_blank');
                             }}
                             className={styles.whatsappBtn}

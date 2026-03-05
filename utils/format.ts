@@ -8,5 +8,5 @@ export const formatCurrency = (amount: number): string => {
 
     // نضيف رمز العملة العربية يدوياً
     // Manually append the Arabic currency symbol
-    return `${formattedNumber} د.ع`;
+    return `${formattedNumber} دينار عراقي`;
 };

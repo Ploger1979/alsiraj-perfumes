@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 
 // صفحة لوحة التحكم لإضافة المنتجات
@@ -12,6 +13,8 @@ export default function AdminDashboard() {
     const [message, setMessage] = useState('');
     const [activeTab, setActiveTab] = useState<'add' | 'list' | 'invoice'>('add');
     const [productsList, setProductsList] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
     const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -20,6 +23,10 @@ export default function AdminDashboard() {
     const [tableWidth, setTableWidth] = useState(0);
 
     useEffect(() => {
+        // التحقق من الـ role عند تحميل الصفحة
+        const role = Cookies.get('role');
+        setIsSuperAdmin(role === 'superadmin');
+
         const updateWidth = () => {
             if (activeTab === 'list' && tableContainerRef.current) {
                 setTableWidth(tableContainerRef.current.scrollWidth);
@@ -47,6 +54,7 @@ export default function AdminDashboard() {
     // State to hold new product data
     const [formData, setFormData] = useState({
         name: '',
+        nameAr: '',
         description: '',
         price: '',
         image: '',
@@ -114,6 +122,7 @@ export default function AdminDashboard() {
 
         setFormData({
             name: product.name,
+            nameAr: product.nameAr || '',
             description: product.description || '',
             price: product.price,
             image: product.image,
@@ -135,6 +144,7 @@ export default function AdminDashboard() {
     const resetForm = () => {
         setFormData({
             name: '',
+            nameAr: '',
             description: '',
             price: '',
             image: '',
@@ -292,12 +302,14 @@ export default function AdminDashboard() {
                 >
                     نظام الفواتير 📄
                 </button>
-                <button
-                    onClick={() => router.push('/admin/users')}
-                    className="btn"
-                >
-                    إدارة المشرفين 🛡️
-                </button>
+                {isSuperAdmin && (
+                    <button
+                        onClick={() => router.push('/admin/users')}
+                        className="btn"
+                    >
+                        إدارة المشرفين 🛡️
+                    </button>
+                )}
             </div>
 
             {message && (
@@ -324,16 +336,28 @@ export default function AdminDashboard() {
                     maxWidth: '800px',
                     margin: '0 auto'
                 }}>
-                    {/* اسم المنتج */}
+                    {/* اسم المنتج بالإنجليزي */}
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>اسم المنتج</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>اسم المنتج بالإنجليزي <span style={{ color: '#aaa', fontSize: '0.8rem' }}>(English Name)</span></label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                            placeholder="مثال: Dior Sauvage"
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc', direction: 'ltr' }}
+                            placeholder="e.g. Dior Sauvage"
+                        />
+                    </div>
+
+                    {/* اسم المنتج بالعربي */}
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>اسم المنتج بالعربي <span style={{ color: '#aaa', fontSize: '0.8rem' }}>(الاسم العربي)</span></label>
+                        <input
+                            type="text"
+                            value={formData.nameAr}
+                            onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc', direction: 'rtl' }}
+                            placeholder="مثال: ديور سوفاج"
                         />
                     </div>
 
@@ -395,11 +419,11 @@ export default function AdminDashboard() {
                                         <div style={{ flex: 1, fontWeight: 'bold', color: 'var(--color-gold)' }}>{s.size}</div>
                                         <div style={{ flex: 2 }}>
                                             <span style={{ color: '#aaa', fontSize: '0.8rem' }}>السعر: </span>
-                                            {Number(s.price).toLocaleString()} د.ع
+                                            {Number(s.price).toLocaleString()} دينار عراقي
                                         </div>
                                         {Number(s.originalPrice) > 0 && (
                                             <div style={{ flex: 2, textDecoration: 'line-through', color: '#666' }}>
-                                                {Number(s.originalPrice).toLocaleString()} د.ع
+                                                {Number(s.originalPrice).toLocaleString()} دينار عراقي
                                             </div>
                                         )}
                                         <div style={{ display: 'flex', gap: '5px' }}>
@@ -620,8 +644,9 @@ export default function AdminDashboard() {
                                     <option value="men">رجالي (Men)</option>
                                     <option value="women">نسائي (Women)</option>
                                     <option value="unisex">للجنسين (Unisex)</option>
-                                    <option value="french">فرنسي (French)</option>
+                                    <option value="french">ماركات عالمية</option>
                                     <option value="oils">زيوت (Oils)</option>
+                                    <option value="testers">تيستيرات (Tester)</option>
                                 </select>
                             </div>
 
@@ -647,16 +672,63 @@ export default function AdminDashboard() {
                                     onChange={(e) => setFormData({ ...formData, concentration: e.target.value })}
                                     style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc', background: '#333', color: '#fff' }}
                                 >
+                                    <option value="Toilette">Toilette</option>
                                     <option value="Eau de Toilette">Eau de Toilette</option>
                                     <option value="Parfum">Parfum</option>
-                                    <option value="Oil">Oil</option>
+                                    <option value="Eau de Parfum">Eau de Parfum</option>
+                                    <option value="Ultra">Ultra</option>
+                                    <option value="Oil">Oil (زيت)</option>
+                                    <option value="Tester">تيستيرات (Tester)</option>
                                 </select>
                             </div>
                         </div>
 
 
-                    </div>
+                        {/* ⭐ تمييز المنتج في الصفحة الرئيسية */}
+                        <div
+                            onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
+                            style={{
+                                marginTop: '1rem',
+                                padding: '1rem 1.2rem',
+                                borderRadius: '10px',
+                                border: formData.isFeatured ? '2px solid #c9a84c' : '2px solid #444',
+                                background: formData.isFeatured ? 'rgba(201,168,76,0.1)' : 'rgba(255,255,255,0.03)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                userSelect: 'none',
+                            }}
+                        >
+                            {/* Switch */}
+                            <div style={{
+                                width: '48px', height: '26px', borderRadius: '13px',
+                                background: formData.isFeatured ? '#c9a84c' : '#555',
+                                position: 'relative', transition: 'background 0.2s', flexShrink: 0,
+                            }}>
+                                <div style={{
+                                    position: 'absolute', top: '3px',
+                                    right: formData.isFeatured ? '3px' : 'auto',
+                                    left: formData.isFeatured ? 'auto' : '3px',
+                                    width: '20px', height: '20px', borderRadius: '50%',
+                                    background: '#fff', transition: 'all 0.2s',
+                                    boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
+                                }} />
+                            </div>
+                            <div>
+                                <p style={{ margin: 0, fontWeight: 'bold', color: formData.isFeatured ? '#c9a84c' : '#ccc' }}>
+                                    ⭐ {formData.isFeatured ? 'مميز في الصفحة الرئيسية' : 'غير مميز'}
+                                </p>
+                                <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: '#888' }}>
+                                    {formData.isFeatured
+                                        ? 'في حالة تفعيله: سيظهر المنتج في الصفحة الرئيسية'
+                                        : 'في حالة عدم تفعيله: سيظهر المنتج المضاف تلقائياً في صفحة المنتجات'}
+                                </p>
+                            </div>
+                        </div>
 
+                    </div>
 
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         {editingId && (
@@ -681,7 +753,30 @@ export default function AdminDashboard() {
                 </form >
             ) : activeTab === 'list' ? (
                 <div style={{ background: 'var(--card-bg)', padding: '1rem', borderRadius: '8px' }}>
-                    <h2 style={{ marginBottom: '1rem' }}>المنتجات الحالية ({productsList.length})</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+                        <h2 style={{ margin: 0 }}>المنتجات الحالية ({productsList.length})</h2>
+
+                        {/* 🔍 Search Bar */}
+                        <div style={{ position: 'relative', minWidth: '300px' }}>
+                            <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
+                            <input
+                                type="text"
+                                placeholder="ابحث عن منتج بالاسم..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '10px 40px 10px 15px',
+                                    borderRadius: '50px',
+                                    border: '1px solid var(--color-gold)',
+                                    background: 'rgba(212, 175, 55, 0.05)',
+                                    color: 'var(--foreground)',
+                                    outline: 'none',
+                                    fontSize: '0.95rem'
+                                }}
+                            />
+                        </div>
+                    </div>
 
                     {/* Top Scrollbar Restored */}
                     <div
@@ -717,34 +812,39 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productsList.map((product, index) => (
-                                    <tr key={product.id}>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{index + 1}</td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                                            <img src={product.image} alt={product.name} width={50} height={50} style={{ objectFit: 'contain' }} />
-                                        </td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.name}</td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.price}</td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.size || '100ml'}</td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.category}</td>
-                                        <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>
-                                            <button
-                                                onClick={() => handleEdit(product)}
-                                                className="btn"
-                                                style={{ padding: '5px 10px', marginRight: '5px', borderColor: 'var(--color-gold)', color: 'var(--color-gold)', fontSize: '0.8rem' }}
-                                            >
-                                                تعديل ✏️
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(product.id)}
-                                                className="btn"
-                                                style={{ padding: '5px 10px', borderColor: 'red', color: 'red', fontSize: '0.8rem' }}
-                                            >
-                                                حذف 🗑️
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {productsList
+                                    .filter(p =>
+                                        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                        (p.nameAr && p.nameAr.toLowerCase().includes(searchQuery.toLowerCase()))
+                                    )
+                                    .map((product, index) => (
+                                        <tr key={product.id}>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{index + 1}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                                                <img src={product.image} alt={product.name} width={50} height={50} style={{ objectFit: 'contain' }} />
+                                            </td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.name}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.price}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.size || '100ml'}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.category}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd', textAlign: 'center' }}>
+                                                <button
+                                                    onClick={() => handleEdit(product)}
+                                                    className="btn"
+                                                    style={{ padding: '5px 10px', marginRight: '5px', borderColor: 'var(--color-gold)', color: 'var(--color-gold)', fontSize: '0.8rem' }}
+                                                >
+                                                    تعديل ✏️
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(product.id)}
+                                                    className="btn"
+                                                    style={{ padding: '5px 10px', borderColor: 'red', color: 'red', fontSize: '0.8rem' }}
+                                                >
+                                                    حذف 🗑️
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     </div>

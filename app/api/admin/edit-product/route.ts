@@ -29,16 +29,16 @@ export async function POST(request: Request) {
         let newOriginalPrice = 0;
 
         if (isOffer) {
-            newPrice = Number(data.salePrice);
-            newOriginalPrice = Number(data.price);
+            newPrice = Number(data.price);            // سعر البيع الحالي
+            newOriginalPrice = Number(data.originalPrice); // السعر قبل الخصم (الأعلى)
         } else {
             newPrice = Number(data.price);
             newOriginalPrice = 0;
         }
 
         // 3. Update standard fields
-        // 3. Update standard fields
         product.name = data.name;
+        product.nameAr = data.nameAr || '';
         product.description = data.description;
 
         // =========================================================================================
@@ -47,18 +47,17 @@ export async function POST(request: Request) {
         // 1. نتأكد أن مصفوفة الصور موجودة
         if (!product.images) product.images = [];
 
-        // 2. نحفظ الصورة الرئيسية الحالية في الألبوم قبل أي تعديل
-        if (product.image && !product.images.includes(product.image)) {
-            product.images.push(product.image);
-        }
-
-        // 3. إذا قام الأدمن برفع صورة جديدة
-        if (data.image) {
-            // إذا كان المنتج بدون صورة، نضعها كصورة رئيسية
-            if (!product.image) {
-                product.image = data.image;
+        // 2. إذا رفع الأدمن صورة جديدة، نجعلها هي الرئيسية
+        if (data.image && data.image !== product.image) {
+            // أ) نحفظ الصورة القديمة في الألبوم أولاً
+            if (product.image && !product.images.includes(product.image)) {
+                product.images.push(product.image);
             }
-            // نضيف الصورة الجديدة للألبوم دائماً
+
+            // ب) نحدث الصورة الرئيسية بالجديدة
+            product.image = data.image;
+
+            // ج) نتأكد أن الصورة الجديدة موجودة أيضاً في الألبوم
             if (!product.images.includes(data.image)) {
                 product.images.push(data.image);
             }

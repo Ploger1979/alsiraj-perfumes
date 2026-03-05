@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef } from 'react';
-
+import { useState } from 'react';
 import { formatCurrency } from '@/utils/format';
 import { useRouter } from 'next/navigation';
 
@@ -10,39 +9,19 @@ export default function InvoiceGenerator() {
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     const [customerAddress, setCustomerAddress] = useState('');
-    const [locationType, setLocationType] = useState(''); // baghdad or provinces, or empty
     const [deliveryCost, setDeliveryCost] = useState(0);
     const [items, setItems] = useState([{ name: '', quantity: 1, price: 0 }]);
     const [notes, setNotes] = useState('');
+    const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().split('T')[0]);
+    const [invoiceNumber, setInvoiceNumber] = useState(`INV-${Date.now().toString().slice(-6)}`);
+    const [manualTotal, setManualTotal] = useState<number | string>('');
 
-    const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().split('T')[0]); // Default to today
-    const [manualTotal, setManualTotal] = useState<number | string>(''); // If empty string, use calculated total
-
-    const componentRef = useRef(null);
-
-    // تحديث سعر التوصيل تلقائياً
-    const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const type = e.target.value;
-        setLocationType(type);
-        if (type === 'baghdad') setDeliveryCost(5000);
-        else if (type === 'provinces') setDeliveryCost(8000);
-        else setDeliveryCost(0);
-    };
-
-    // حساب المجاميع
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const calculatedTotal = subtotal + deliveryCost;
-    // const finalTotal = manualTotal !== '' ? Number(manualTotal) : calculatedTotal; // Not used directly in render but logic exists
+    const finalTotal = manualTotal !== '' ? Number(manualTotal) : calculatedTotal;
 
-    const handleAddItem = () => {
-        setItems([...items, { name: '', quantity: 1, price: 0 }]);
-    };
-
-    const handleRemoveItem = (index: number) => {
-        const newItems = items.filter((_, i) => i !== index);
-        setItems(newItems);
-    };
-
+    const handleAddItem = () => setItems([...items, { name: '', quantity: 1, price: 0 }]);
+    const handleRemoveItem = (index: number) => setItems(items.filter((_, i) => i !== index));
     const handleItemChange = (index: number, field: string, value: any) => {
         const newItems = [...items];
         // @ts-ignore
@@ -50,272 +29,587 @@ export default function InvoiceGenerator() {
         setItems(newItems);
     };
 
-    // Print functionality
-    const handlePrint = () => {
-        window.print();
+    const handlePrint = () => window.print();
+
+    const formatDateAr = (dateStr: string) => {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('ar-IQ', { year: 'numeric', month: 'long', day: 'numeric' });
     };
 
     return (
-        <div className="invoice-container">
-            <style jsx global>{`
+        <div>
+            <style>{`
+                /* ==========================================
+                   PRINT STYLES - إخفاء كل شيء ما عدا الفاتورة
+                ========================================== */
                 @media print {
+                    html, body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: white !important;
+                    }
                     .no-print { display: none !important; }
-                    .print-only { display: block !important; }
-                    body { background: white; color: black; }
-                    .invoice-paper { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+                    .invoice-wrapper {
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        background: white !important;
+                    }
+                    .invoice-paper {
+                        box-shadow: none !important;
+                        border: none !important;
+                        margin: 0 !important;
+                        padding: 24px !important;
+                        max-width: 100% !important;
+                        border-radius: 0 !important;
+                    }
                 }
-                .invoice-paper {
-                    background: white;
-                    color: black;
-                    padding: 40px;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+
+                /* ==========================================
+                   FORM STYLES
+                ========================================== */
+                .inv-form-section {
+                    background: var(--card-bg, #1a1a2e);
+                    border: 1px solid rgba(212,175,55,0.2);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                }
+                .inv-form-section h3 {
+                    color: var(--color-gold, #c9a84c);
+                    margin: 0 0 1rem 0;
+                    font-size: 1rem;
+                    border-bottom: 1px solid rgba(212,175,55,0.2);
+                    padding-bottom: 0.5rem;
+                }
+                .inv-input {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(255,255,255,0.15);
+                    background: rgba(255,255,255,0.05);
+                    color: var(--color-text, #fff);
+                    font-size: 0.95rem;
+                    box-sizing: border-box;
                     direction: rtl;
-                    font-family: 'Times New Roman', serif;
+                }
+                .inv-input:focus { outline: none; border-color: #c9a84c; }
+                .inv-input::placeholder { color: #888; }
+
+                /* ==========================================
+                   INVOICE PAPER STYLES
+                ========================================== */
+                .invoice-paper {
+                    background: #fff;
+                    color: #1a1a1a;
+                    padding: 40px;
+                    max-width: 820px;
+                    margin: 0 auto;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+                    direction: rtl;
+                    font-family: 'Cairo', 'Tajawal', 'Arial', sans-serif;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                /* الشعار كخلفية مائية احترافية */
+                .invoice-watermark {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 420px;
+                    height: 420px;
+                    opacity: 0.07;
+                    pointer-events: none;
+                    z-index: 0;
+                    filter: invert(15%) sepia(60%) saturate(600%) hue-rotate(190deg) brightness(0.6) contrast(1.2);
+                }
+
+                .invoice-content { position: relative; z-index: 1; }
+
+                /* Header */
+                .inv-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding-bottom: 0;
+                    margin-bottom: 0;
+                }
+                .inv-header-left {
+                    flex: 1;
+                }
+                .inv-header-center {
+                    flex: 0 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 0 24px;
+                }
+                .inv-header-right {
+                    flex: 1;
+                    text-align: left;
+                }
+                .inv-header-divider {
+                    height: 4px;
+                    background: linear-gradient(90deg, #c9a84c 0%, #e8c94c 50%, #c9a84c 100%);
+                    margin: 18px 0 20px;
+                    border-radius: 2px;
+                }
+                .inv-company-name {
+                    font-size: 1.55rem;
+                    font-weight: 900;
+                    color: #0f1923;
+                    margin: 0 0 4px 0;
+                    letter-spacing: -0.5px;
+                }
+                .inv-company-sub {
+                    font-size: 0.82rem;
+                    color: #c9a84c;
+                    font-weight: 700;
+                    margin: 0 0 3px 0;
+                }
+                .inv-company-contact {
+                    font-size: 0.76rem;
+                    color: #555;
+                    margin: 1px 0;
+                }
+                .inv-title {
+                    font-size: 2rem;
+                    font-weight: 900;
+                    color: #0f1923;
+                    margin: 0;
+                    letter-spacing: 1px;
+                }
+                .inv-title span {
+                    color: #c9a84c;
+                }
+                .inv-number {
+                    font-size: 0.9rem;
+                    color: #777;
+                    margin: 4px 0 2px 0;
+                    direction: ltr;
+                }
+                .inv-date {
+                    font-size: 0.85rem;
+                    color: #333;
+                    margin: 2px 0 0 0;
+                }
+                .inv-logo-ring {
+                    width: 130px;
+                    height: 130px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 0 0 4px #c9a84c, 0 0 0 7px rgba(201,168,76,0.15), 0 8px 30px rgba(0,0,0,0.25);
+                }
+
+                /* Customer info */
+                .inv-customer {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0;
+                    background: #f8f6f0;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    margin-bottom: 24px;
+                    border: 1px solid #e0d8c8;
+                }
+                .inv-customer-field {
+                    font-size: 0.92rem;
+                    color: #333;
+                    padding: 14px 16px;
+                    border-bottom: 1px solid #e0d8c8;
+                    border-left: 1px solid #e0d8c8;
+                }
+                .inv-customer-field:nth-child(odd) { border-left: 3px solid #c9a84c; }
+                .inv-customer-field:nth-child(even) { border-left: none; }
+                .inv-customer-field strong {
+                    display: block;
+                    font-size: 0.72rem;
+                    color: #c9a84c;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 3px;
+                    font-weight: 700;
+                }
+
+                /* Table */
+                .inv-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                    font-size: 0.9rem;
+                }
+                .inv-table thead tr {
+                    background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+                    color: #c9a84c;
+                }
+                .inv-table thead tr th:first-child { border-radius: 0 8px 0 0; }
+                .inv-table thead tr th:last-child  { border-radius: 8px 0 0 0; }
+                .inv-table th {
+                    padding: 13px 12px;
+                    text-align: right;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                    font-size: 0.82rem;
+                }
+                .inv-table th:last-child, .inv-table td:last-child { text-align: left; }
+                .inv-table th:nth-child(3), .inv-table td:nth-child(3) { text-align: center; }
+                .inv-table tbody tr:nth-child(even) { background: #fafaf7; }
+                .inv-table tbody tr { transition: background 0.15s; }
+                .inv-table td {
+                    padding: 12px;
+                    border-bottom: 1px solid #ede8da;
+                    color: #333;
+                    vertical-align: middle;
+                }
+
+                /* Totals */
+                .inv-totals {
+                    display: flex;
+                    justify-content: flex-end;
+                    margin-bottom: 28px;
+                }
+                .inv-totals-box {
+                    min-width: 260px;
+                    border: 1px solid #e0d8c8;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .inv-total-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 10px 14px;
+                    font-size: 0.92rem;
+                    border-bottom: 1px solid #e0d8c8;
+                }
+                .inv-total-row:last-child {
+                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                    color: #c9a84c;
+                    font-weight: 900;
+                    font-size: 1.1rem;
+                    border-bottom: none;
+                }
+
+                /* Footer */
+                .inv-terms {
+                    background: #f8f6f0;
+                    border-radius: 8px;
+                    padding: 14px;
+                    margin-bottom: 24px;
+                    font-size: 0.8rem;
+                    color: #666;
+                    line-height: 1.8;
+                }
+                .inv-signatures {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 2px solid #e0d8c8;
+                }
+                .inv-sig-block {
+                    text-align: center;
+                    min-width: 150px;
+                }
+                .inv-sig-line {
+                    border-bottom: 2px solid #333;
+                    width: 140px;
+                    margin: 30px auto 8px;
+                }
+                .inv-sig-label {
+                    font-size: 0.82rem;
+                    color: #555;
+                }
+
+                .inv-gold-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, #c9a84c, #e8c94c);
+                    color: #1a1a1a;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    padding: 2px 8px;
+                    border-radius: 20px;
+                    margin-top: 4px;
                 }
             `}</style>
 
-            {/* Form Section (Hidden when printing) */}
-            <div className="no-print container" style={{ paddingTop: '120px', paddingBottom: '2rem', paddingRight: '2rem', paddingLeft: '2rem', direction: 'rtl' }}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <button
-                        onClick={() => router.push('/admin/dashboard')}
-                        className="btn"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            marginBottom: '2rem',
-                            padding: '12px 24px',
-                            fontSize: '1.1rem',
-                            backgroundColor: '#333',
-                            color: 'white',
-                            border: '1px solid #555',
-                            cursor: 'pointer',
-                            borderRadius: '8px'
-                        }}
-                    >
-                        ⬅️ الرجوع إلى لوحة التحكم (Dashboard)
-                    </button>
-                </div>
+            {/* ==========================================
+                ADMIN FORM (مخفي عند الطباعة)
+            ========================================== */}
+            <div className="no-print" style={{ background: 'var(--bg-dark, #0d1117)', minHeight: '100vh', padding: '120px 2rem 4rem', direction: 'rtl' }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
-                <h1 style={{ marginBottom: '2rem', color: 'var(--color-gold)' }}>إنشاء فاتورة / عقد بيع</h1>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                    {/* Customer Details Input */}
-                    <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '8px' }}>
-                        <h3>بيانات العميل والفاتورة</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-                            <input
-                                placeholder="اسم العميل"
-                                value={customerName}
-                                onChange={e => setCustomerName(e.target.value)}
-                                style={{ padding: '8px' }}
-                            />
-                            <input
-                                placeholder="رقم الهاتف"
-                                value={customerPhone}
-                                onChange={e => setCustomerPhone(e.target.value)}
-                                style={{ padding: '8px' }}
-                            />
-                            <input
-                                placeholder="العنوان"
-                                value={customerAddress}
-                                onChange={e => setCustomerAddress(e.target.value)}
-                                style={{ padding: '8px' }}
-                            />
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <label style={{ whiteSpace: 'nowrap' }}>تاريخ الفاتورة:</label>
-                                <input
-                                    type="date"
-                                    value={invoiceDate}
-                                    onChange={e => setInvoiceDate(e.target.value)}
-                                    style={{ padding: '8px', width: '100%' }}
-                                />
-                            </div>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <select
-                                    value={locationType}
-                                    onChange={handleLocationChange}
-                                    style={{ padding: '8px', flex: 1 }}
-                                >
-                                    <option value="">اختر نوع التوصيل...</option>
-                                    <option value="baghdad">داخل بغداد</option>
-                                    <option value="provinces">خارج بغداد (محافظات)</option>
-                                </select>
-                                <input
-                                    type="number"
-                                    placeholder="سعر التوصيل"
-                                    value={deliveryCost}
-                                    onChange={e => setDeliveryCost(Number(e.target.value))}
-                                    style={{ padding: '8px', width: '100px' }}
-                                />
-                            </div>
-                        </div>
+                    {/* Header */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                        <button
+                            onClick={() => router.push('/admin/dashboard')}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '10px 20px', fontSize: '0.95rem', backgroundColor: '#1f1f2e', color: '#c9a84c', border: '1px solid #c9a84c', cursor: 'pointer', borderRadius: '8px' }}
+                        >
+                            ⬅ لوحة التحكم
+                        </button>
+                        <h1 style={{ margin: 0, color: '#c9a84c', fontSize: '1.5rem' }}>🧾 إنشاء فاتورة بيع</h1>
+                        <button
+                            onClick={handlePrint}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '10px 20px', fontSize: '0.95rem', backgroundColor: '#c9a84c', color: '#1a1a1a', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 'bold' }}
+                        >
+                            🖨️ طباعة / PDF
+                        </button>
                     </div>
 
-                    {/* Items Input */}
-                    <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '8px' }}>
-                        <h3>المنتجات</h3>
-                        {items.map((item, index) => (
-                            <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                                <input
-                                    placeholder="اسم المنتج"
-                                    value={item.name}
-                                    onChange={e => handleItemChange(index, 'name', e.target.value)}
-                                    style={{ flex: 2, padding: '5px', minWidth: '0' }}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="العدد"
-                                    value={item.quantity}
-                                    onChange={e => handleItemChange(index, 'quantity', Number(e.target.value))}
-                                    style={{ width: '50px', padding: '5px' }}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="السعر"
-                                    value={item.price}
-                                    onChange={e => handleItemChange(index, 'price', Number(e.target.value))}
-                                    style={{ flex: 1, padding: '5px', minWidth: '0' }}
-                                />
-                                <button onClick={() => handleRemoveItem(index)} style={{ color: 'red' }}>×</button>
-                            </div>
-                        ))}
-                        <button onClick={handleAddItem} className="btn" style={{ marginTop: '0.5rem' }}>+ إضافة منتج</button>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
 
-                        {/* Manual Total Override */}
-                        <div style={{ marginTop: '1.5rem', borderTop: '1px solid #ddd', paddingTop: '1rem' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontWeight: 'bold' }}>
-                                المبلغ الكلي النهائي:
+                        {/* بيانات العميل */}
+                        <div className="inv-form-section">
+                            <h3>📋 بيانات العميل</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <input className="inv-input" placeholder="اسم العميل" value={customerName} onChange={e => setCustomerName(e.target.value)} />
+                                <input className="inv-input" placeholder="رقم الهاتف" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
+                                <input className="inv-input" placeholder="العنوان / المحافظة" value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} />
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ fontSize: '0.8rem', color: '#aaa', display: 'block', marginBottom: '4px' }}>تاريخ الفاتورة</label>
+                                        <input className="inv-input" type="date" value={invoiceDate} onChange={e => setInvoiceDate(e.target.value)} />
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ fontSize: '0.8rem', color: '#aaa', display: 'block', marginBottom: '4px' }}>رقم الفاتورة</label>
+                                        <input className="inv-input" value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: '0.8rem', color: '#aaa', display: 'block', marginBottom: '4px' }}>أجور التوصيل (دينار)</label>
+                                    <input className="inv-input" type="number" placeholder="0" value={deliveryCost} onChange={e => setDeliveryCost(Number(e.target.value))} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* المنتجات */}
+                        <div className="inv-form-section">
+                            <h3>📦 المنتجات</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '280px', overflowY: 'auto', paddingLeft: '4px' }}>
+                                {items.map((item, index) => (
+                                    <div key={index} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                        <input
+                                            className="inv-input"
+                                            placeholder="اسم العطر / المنتج"
+                                            value={item.name}
+                                            onChange={e => handleItemChange(index, 'name', e.target.value)}
+                                            style={{ flex: 3 }}
+                                        />
+                                        <input
+                                            className="inv-input"
+                                            type="number"
+                                            placeholder="كمية"
+                                            value={item.quantity}
+                                            onChange={e => handleItemChange(index, 'quantity', Number(e.target.value))}
+                                            style={{ width: '55px', flex: 'none', textAlign: 'center' }}
+                                        />
+                                        <input
+                                            className="inv-input"
+                                            type="number"
+                                            placeholder="السعر"
+                                            value={item.price || ''}
+                                            onChange={e => handleItemChange(index, 'price', Number(e.target.value))}
+                                            style={{ flex: 2, textAlign: 'left', direction: 'ltr' }}
+                                        />
+                                        <button
+                                            onClick={() => handleRemoveItem(index)}
+                                            style={{ background: 'rgba(255,60,60,0.15)', border: '1px solid rgba(255,60,60,0.3)', color: '#ff6060', borderRadius: '6px', width: '32px', height: '32px', cursor: 'pointer', fontSize: '1rem', flexShrink: 0 }}
+                                        >×</button>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                onClick={handleAddItem}
+                                style={{ marginTop: '0.75rem', width: '100%', padding: '8px', background: 'rgba(201,168,76,0.1)', border: '1px dashed #c9a84c', color: '#c9a84c', borderRadius: '8px', cursor: 'pointer' }}
+                            >+ إضافة منتج</button>
+
+                            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                <label style={{ fontSize: '0.8rem', color: '#aaa', display: 'block', marginBottom: '4px' }}>المبلغ الكلي (إذا أردت تجاوز الحساب التلقائي)</label>
                                 <input
+                                    className="inv-input"
                                     type="number"
                                     value={manualTotal}
                                     onChange={e => setManualTotal(e.target.value)}
-                                    placeholder={formatCurrency(calculatedTotal)}
-                                    style={{ padding: '8px', width: '150px', fontSize: '1.1rem', fontWeight: 'bold' }}
+                                    placeholder={`تلقائي: ${calculatedTotal.toLocaleString()} دينار`}
                                 />
-                            </label>
-                            <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px' }}>
-                                * اتركه فارغاً ليظهر فارغاً في الفاتورة، أو اكتب الرقم المطلوب.
-                            </p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* ملاحظات */}
+                    <div className="inv-form-section">
+                        <h3>📝 ملاحظات</h3>
+                        <textarea
+                            className="inv-input"
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            placeholder="ملاحظات إضافية تظهر في الفاتورة..."
+                            rows={2}
+                            style={{ resize: 'vertical' }}
+                        />
+                    </div>
+
+                    <button
+                        onClick={handlePrint}
+                        style={{ marginTop: '1.5rem', width: '100%', padding: '14px', fontSize: '1.1rem', background: 'linear-gradient(135deg, #c9a84c, #e8c94c)', color: '#1a1a1a', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        🖨️ طباعة الفاتورة / حفظ كـ PDF
+                    </button>
                 </div>
-
-                <h3 style={{ marginTop: '1rem' }}>ملاحظات</h3>
-                <textarea
-                    value={notes}
-                    onChange={e => setNotes(e.target.value)}
-                    style={{ width: '100%', padding: '1rem', marginTop: '0.5rem' }}
-                    placeholder="ملاحظات إضافية (مثل وقت التسليم)..."
-                />
-
-                <button onClick={handlePrint} className="btn btn-primary" style={{ marginTop: '2rem', width: '100%' }}>
-                    🖨️ طباعة الفاتورة / حفظ PDF
-                </button>
             </div>
 
-            {/* The Actual Invoice (Visible on screen and print) */}
-            <div className="invoice-paper" ref={componentRef} style={{ marginTop: '40px', border: '1px solid #ddd' }}>
-                {/* Header */}
-                <div style={{ textAlign: 'center', borderBottom: '2px solid #000', paddingBottom: '20px', marginBottom: '20px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                            <h2 style={{ margin: 0 }}>مؤسسة السراج للعطور</h2>
-                            <p style={{ margin: 0, fontSize: '0.9rem' }}>Alsiraj Perfumes</p>
-                            <p style={{ margin: '5px 0 0', fontSize: '0.8rem' }}>بغداد - العراق</p>
-                        </div>
-                        <img src="/logo-ohne-bg.png" alt="Logo" style={{ width: '100px', filter: 'invert(1)' }} />
-                        <div style={{ textAlign: 'left' }}>
-                            <h2 style={{ margin: 0 }}>فاتورة بيع</h2>
-                            <p style={{ margin: 0 }}>Sales Receipt</p>
-                            <p style={{ margin: '5px 0 0' }}>التاريخ: {new Date(invoiceDate).toLocaleDateString('en-GB')}</p>
-                        </div>
-                    </div>
-                </div>
+            {/* ==========================================
+                INVOICE PAPER - الفاتورة الحقيقية
+            ========================================== */}
+            <div className="invoice-wrapper" style={{ padding: '40px 20px', background: '#e8e0d0' }}>
+                <div className="invoice-paper">
 
-                {/* Info */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', fontSize: '1.1rem' }}>
-                    <div style={{ flex: 1 }}>
-                        <p><strong>حضرة السيد/ة:</strong> {customerName}</p>
-                        <p><strong>رقم الهاتف:</strong> {customerPhone}</p>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <p><strong>العنوان:</strong> {customerAddress}</p>
-                        <p><strong>نوع التوصيل:</strong> {locationType === 'baghdad' ? 'داخل بغداد' : locationType === 'provinces' ? 'خارج بغداد (محافظات)' : '................'}</p>
-                    </div>
-                </div>
+                    {/* Watermark */}
+                    <img src="/logo-ohne-bg.png" alt="" className="invoice-watermark" aria-hidden="true" />
 
-                {/* Table */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
-                    <thead>
-                        <tr style={{ background: '#f0f0f0', borderBottom: '2px solid #000' }}>
-                            <th style={{ padding: '10px', textAlign: 'right', border: '1px solid #ddd' }}>#</th>
-                            <th style={{ padding: '10px', textAlign: 'right', border: '1px solid #ddd' }}>المادة (Item)</th>
-                            <th style={{ padding: '10px', textAlign: 'center', border: '1px solid #ddd' }}>العدد (Qty)</th>
-                            <th style={{ padding: '10px', textAlign: 'left', border: '1px solid #ddd' }}>سعر المفرد</th>
-                            <th style={{ padding: '10px', textAlign: 'left', border: '1px solid #ddd' }}>الإجمالي</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {items.map((item, i) => (
-                            <tr key={i}>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{i + 1}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.name}</td>
-                                <td style={{ padding: '10px', textAlign: 'center', border: '1px solid #ddd' }}>{item.quantity}</td>
-                                <td style={{ padding: '10px', textAlign: 'left', border: '1px solid #ddd' }}>{formatCurrency(item.price)}</td>
-                                <td style={{ padding: '10px', textAlign: 'left', border: '1px solid #ddd' }}>{formatCurrency(item.price * item.quantity)}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                    <div className="invoice-content">
 
-                {/* Totals */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <div style={{ width: '250px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0' }}>
-                            <span>المجموع الفرعي:</span>
-                            <span>{formatCurrency(subtotal)}</span>
+                        {/* ─── HEADER ─── */}
+                        <div className="inv-header">
+                            {/* يسار: بيانات الشركة */}
+                            <div className="inv-header-left">
+                                <h2 className="inv-company-name">شركة السراج للعطور</h2>
+                                <p className="inv-company-sub">الموزع الرسمي لوكلاء العراق</p>
+                                <p className="inv-company-contact">📞 +964 774 919 1691</p>
+                                <span className="inv-gold-badge">Al Siraj Perfumes ★</span>
+                            </div>
+
+                            {/* وسط: الشعار بدون خلفية */}
+                            <div className="inv-header-center">
+                                <img
+                                    src="/logo-ohne-bg.png"
+                                    alt="Al Siraj Logo"
+                                    style={{
+                                        width: '130px',
+                                        height: '130px',
+                                        objectFit: 'contain',
+                                        filter: 'invert(15%) sepia(60%) saturate(600%) hue-rotate(190deg) brightness(0.6) contrast(1.2)',
+                                    }}
+                                />
+                            </div>
+
+                            {/* يمين: عنوان الفاتورة */}
+                            <div className="inv-header-right">
+                                <h1 className="inv-title">فاتورة <span>بيع</span></h1>
+                                <p className="inv-number">#{invoiceNumber}</p>
+                                <p className="inv-date">📅 {formatDateAr(invoiceDate)}</p>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0' }}>
-                            <span>أجور التوصيل:</span>
-                            <span>{deliveryCost > 0 ? formatCurrency(deliveryCost) : ''}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '2px solid #000', fontWeight: 'bold', fontSize: '1.2rem' }}>
-                            <span>المبلغ الكلي:</span>
-                            <span style={{ fontSize: '1.3rem' }}>
-                                {manualTotal !== ''
-                                    ? formatCurrency(Number(manualTotal))
-                                    : (deliveryCost > 0 || subtotal > 0) ? formatCurrency(calculatedTotal) : ''}
-                            </span>
-                        </div>
-                    </div>
-                </div>
 
-                {/* Footer / Contract Text */}
-                <div style={{ marginTop: '40px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
-                    <p><strong>ملاحظات:</strong> {notes}</p>
-                    <p style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-                        * البضاعة المباعة لا ترد ولا تستبدل إلا في حال وجود عيب مصنعي.
-                        <br />
-                        * الدفع عند الاستلام (Cash on Delivery).
-                        <br />
-                        * يرجى التأكد من المنتجات عند الاستلام.
-                    </p>
-                </div>
+                        {/* خط ذهبي فاصل */}
+                        <div className="inv-header-divider"></div>
 
-                <div style={{ marginTop: '50px', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <p>توقيع المستلم</p>
-                        <br /><br />
-                        <p>.........................</p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <p>توقيع وختم الإدارة</p>
-                        <br /><br />
-                        <p>السراج للعطور</p>
+                        {/* ─── CUSTOMER INFO ─── */}
+                        <div className="inv-customer">
+                            <div className="inv-customer-field">
+                                <strong>اسم العميل</strong>
+                                {customerName || '.....................'}
+                            </div>
+                            <div className="inv-customer-field">
+                                <strong>رقم الهاتف</strong>
+                                {customerPhone || '.....................'}
+                            </div>
+                            <div className="inv-customer-field">
+                                <strong>العنوان / المحافظة</strong>
+                                {customerAddress || '.....................'}
+                            </div>
+                            <div className="inv-customer-field">
+                                <strong>طريقة الدفع</strong>
+                                دفع عند الاستلام (COD)
+                            </div>
+                        </div>
+
+                        {/* ─── TABLE ─── */}
+                        <table className="inv-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '40px' }}>#</th>
+                                    <th>المنتج / العطر</th>
+                                    <th style={{ width: '70px' }}>الكمية</th>
+                                    <th style={{ width: '140px', textAlign: 'left' }}>سعر المفرد</th>
+                                    <th style={{ width: '140px', textAlign: 'left' }}>الإجمالي</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map((item, i) => (
+                                    <tr key={i}>
+                                        <td style={{ textAlign: 'center', color: '#999' }}>{i + 1}</td>
+                                        <td style={{ fontWeight: item.name ? '600' : '400', color: item.name ? '#1a1a1a' : '#bbb' }}>
+                                            {item.name || '—'}
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>{item.quantity}</td>
+                                        <td style={{ textAlign: 'left', direction: 'ltr', fontSize: '0.88rem' }}>{formatCurrency(item.price)}</td>
+                                        <td style={{ textAlign: 'left', direction: 'ltr', fontWeight: '700', color: '#c9a84c', fontSize: '0.88rem' }}>{formatCurrency(item.price * item.quantity)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {/* ─── TOTALS ─── */}
+                        <div className="inv-totals">
+                            <div className="inv-totals-box">
+                                <div className="inv-total-row">
+                                    <span>المجموع الفرعي:</span>
+                                    <span style={{ direction: 'ltr' }}>{formatCurrency(subtotal)}</span>
+                                </div>
+                                {deliveryCost > 0 && (
+                                    <div className="inv-total-row">
+                                        <span>أجور التوصيل:</span>
+                                        <span style={{ direction: 'ltr' }}>{formatCurrency(deliveryCost)}</span>
+                                    </div>
+                                )}
+                                <div className="inv-total-row">
+                                    <span>💰 المبلغ الكلي:</span>
+                                    <span style={{ direction: 'ltr' }}>
+                                        {manualTotal !== ''
+                                            ? formatCurrency(Number(manualTotal))
+                                            : (finalTotal > 0 ? formatCurrency(finalTotal) : '—')}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ─── NOTES & TERMS ─── */}
+                        <div className="inv-terms">
+                            {notes && <p style={{ marginBottom: '8px', color: '#444', fontWeight: '600' }}>📝 {notes}</p>}
+                            <p>• البضاعة المباعة لا ترد ولا تستبدل إلا في حالة وجود عيب مصنعي.</p>
+                            <p>• الدفع عند الاستلام — يرجى التأكد من المنتجات قبل توقيع الاستلام.</p>
+                            <p>• شكراً لثقتكم بشركة السراج للعطور 🌟</p>
+                        </div>
+
+                        {/* ─── SIGNATURES ─── */}
+                        <div className="inv-signatures">
+                            <div className="inv-sig-block">
+                                <div className="inv-sig-line"></div>
+                                <p className="inv-sig-label">توقيع المستلم</p>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <img
+                                    src="/logo-ohne-bg.png"
+                                    alt=""
+                                    style={{
+                                        width: '65px',
+                                        height: '65px',
+                                        objectFit: 'contain',
+                                        filter: 'invert(15%) sepia(60%) saturate(600%) hue-rotate(190deg) brightness(0.6) contrast(1.2)',
+                                    }}
+                                />
+                                <p style={{ fontSize: '0.72rem', color: '#c9a84c', margin: '4px 0 0', fontWeight: '700', letterSpacing: '0.5px' }}>شركة السراج للعطور</p>
+                            </div>
+                            <div className="inv-sig-block">
+                                <div className="inv-sig-line"></div>
+                                <p className="inv-sig-label">توقيع وختم الإدارة</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

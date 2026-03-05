@@ -15,7 +15,7 @@ export default function PerfumesPage() {
                         style={{ objectFit: "cover", transition: "transform 0.5s" }}
                     />
                     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <h2 style={{ fontSize: "2.5rem", color: "#FFFFFF", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>عطور فرنسية</h2>
+                        <h2 style={{ fontSize: "2.5rem", color: "#FFFFFF", textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>ماركات عالمية</h2>
                     </div>
                 </Link>
 

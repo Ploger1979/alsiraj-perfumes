@@ -11,10 +11,11 @@ export default function CartDrawer() {
     // جلب بيانات ووظائف السلة من المزود (Context)
     const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, totalPrice } = useCart();
 
-    // منطق حساب التوصيل
-    const [deliveryType, setDeliveryType] = useState<'baghdad' | 'provinces'>('baghdad');
-    const deliveryCost = deliveryType === 'baghdad' ? 5000 : 8000; // تكلفة التوصيل حسب الموقع
-    const finalTotal = totalPrice + deliveryCost; // السعر النهائي مع التوصيل
+    const DELIVERY_COST = 5000; // تكلفة التوصيل لجميع المحافظات
+    const FREE_SHIPPING_THRESHOLD = 100000; // الشحن مجاني للطلبات فوق 100,000 دينار
+    const isFreeShipping = totalPrice >= FREE_SHIPPING_THRESHOLD;
+    const deliveryCost = isFreeShipping ? 0 : DELIVERY_COST;
+    const finalTotal = totalPrice + deliveryCost;
 
     if (!isCartOpen) return null;
 
@@ -75,16 +76,13 @@ export default function CartDrawer() {
 
                 {cart.length > 0 && (
                     <div className={styles.footer}>
-                        <div className={styles.deliverySelector} style={{ marginBottom: '1rem', padding: '10px', background: '#f9f9f9', borderRadius: '5px' }}>
-                            <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem', fontWeight: 'bold' }}>موقع التوصيل:</label>
-                            <select
-                                onChange={(e) => setDeliveryType(e.target.value as 'baghdad' | 'provinces')}
-                                value={deliveryType}
-                                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            >
-                                <option value="baghdad">داخل بغداد (5,000 د.ع)</option>
-                                <option value="provinces">خارج بغداد / محافظات (8,000 د.ع)</option>
-                            </select>
+                        <div className={styles.deliverySelector} style={{ marginBottom: '1rem', padding: '10px', background: 'rgba(212,175,55,0.07)', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.2)' }}>
+                            <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 'bold' }}>
+                                🚚 التوصيل لجميع المحافظات
+                            </p>
+                            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: 'var(--color-gold, #c9a84c)' }}>
+                                {isFreeShipping ? '✨ التوصيل مجاني لطلبك!' : `5,000 دينار عراقي`}
+                            </p>
                         </div>
 
                         <div className={styles.total} style={{ fontSize: '0.9rem', color: '#666', marginBottom: '5px' }}>
@@ -104,8 +102,7 @@ export default function CartDrawer() {
                         <button
                             className={styles.checkoutBtn}
                             onClick={() => {
-                                const phoneNumber = "9647735856711";
-                                const locationLabel = deliveryType === 'baghdad' ? 'داخل بغداد' : 'محافظات';
+                                const phoneNumber = "9647749191691";
 
                                 let message = "مرحباً، أود إتمام الطلب التالي:\n\n";
                                 cart.forEach(item => {
@@ -114,7 +111,9 @@ export default function CartDrawer() {
 
                                 message += `\n------------------\n`;
                                 message += `المجموع الفرعي: ${formatCurrency(totalPrice)}\n`;
-                                message += `التوصيل (${locationLabel}): ${formatCurrency(deliveryCost)}\n`;
+                                message += isFreeShipping
+                                    ? `التوصيل: مجاني ✨\n`
+                                    : `التوصيل لجميع المحافظات: ${formatCurrency(DELIVERY_COST)}\n`;
                                 message += `\n*المجموع الكلي: ${formatCurrency(finalTotal)}*\n`;
                                 message += `------------------\n`;
                                 message += "\nيرجى تأكيد الطلب وتزويدي بموعد الاستلام.";

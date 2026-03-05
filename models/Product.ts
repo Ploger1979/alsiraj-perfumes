@@ -8,8 +8,9 @@ export interface ProductSize {
 }
 
 export interface IProduct extends Document {
-    id: number; // Keeping legacy numeric ID if possible, or we might transition to _id
+    id: number;
     name: string;
+    nameAr?: string;
     description?: string;
     price: number;
     originalPrice?: number;
@@ -29,6 +30,7 @@ export interface IProduct extends Document {
 const ProductSchema: Schema = new Schema({
     id: { type: Number, required: true, unique: true }, // Legacy ID support
     name: { type: String, required: true },
+    nameAr: { type: String },
     description: { type: String },
     price: { type: Number, required: true },
     originalPrice: { type: Number },

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         const newUser = new User({
             username,
             password: hashedPassword,
-            role: 'admin'
+            role: 'admin' // المستخدمون الجدد يكونوا admin فقط
         });
 
         await newUser.save();
@@ -56,9 +56,14 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
-        // Prevent deleting the last admin or specific super admin if needed
-        // For now, allow deletion but maybe checking count is wise?
-        // Let's just delete for flexibility.
+        // 🔒 حماية حساب superadmin من الحذف
+        const userToDelete = await User.findById(id);
+        if (!userToDelete) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+        if (userToDelete.role === 'superadmin') {
+            return NextResponse.json({ error: 'لا يمكن حذف حساب المدير العام' }, { status: 403 });
+        }
 
         await User.findByIdAndDelete(id);
 

@@ -65,14 +65,17 @@ export async function POST(request: Request) {
                 existingProduct.images.push(existingProduct.image);
             }
 
-            // ج) إذا تم رفع صورة جديدة مع الطلب
-            if (data.image) {
-                // إذا لم يكن للمنتج صورة أصلاً، نضعها كصورة رئيسية
-                if (!existingProduct.image) {
-                    existingProduct.image = data.image;
+            // ج) إذا تم رفع صورة جديدة، تصبح هي الصورة الرئيسية
+            if (data.image && data.image !== existingProduct.image) {
+                // حفظ الصورة القديمة في الألبوم إذا لم تكن موجودة
+                if (existingProduct.image && !existingProduct.images.includes(existingProduct.image)) {
+                    existingProduct.images.push(existingProduct.image);
                 }
 
-                // نضيف الصورة الجديدة للألبوم دائماً (بشرط عدم التكرار)
+                // تعيين الجديدة كصورة رئيسية
+                existingProduct.image = data.image;
+
+                // إضافتها للألبوم أيضاً
                 if (!existingProduct.images.includes(data.image)) {
                     existingProduct.images.push(data.image);
                 }
@@ -91,6 +94,7 @@ export async function POST(request: Request) {
             // -----------------------------------------------------------------------------------------
             // نقوم بتحديث الوصف، الفئة، والتركيز ليطابق أحدث إدخال.
             existingProduct.description = data.description || existingProduct.description;
+            existingProduct.nameAr = data.nameAr || existingProduct.nameAr;
             existingProduct.category = data.category || existingProduct.category;
             existingProduct.gender = data.gender || existingProduct.gender;
             existingProduct.concentration = data.concentration || existingProduct.concentration;
@@ -123,8 +127,9 @@ export async function POST(request: Request) {
 
         // Prepare the object
         const productData: any = {
-            id: newId, // Sequential ID ✅
+            id: newId,
             name: data.name,
+            nameAr: data.nameAr || '',
             description: data.description,
             image: data.image,
             images: data.images,
@@ -137,8 +142,8 @@ export async function POST(request: Request) {
         };
 
         if (data.isOffer) {
-            productData.price = Number(data.salePrice);
-            productData.originalPrice = Number(data.price);
+            productData.price = Number(data.price);           // سعر البيع الحالي
+            productData.originalPrice = Number(data.originalPrice); // السعر قبل الخصم (الأعلى)
         } else {
             productData.price = Number(data.price);
             // No originalPrice

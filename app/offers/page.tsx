@@ -79,15 +79,15 @@ export default async function OffersPage() {
                                         {product.isOffer && product.originalPrice ? (
                                             <>
                                                 <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9em' }}>
-                                                    {product.originalPrice.toLocaleString()} د.ع
+                                                    {product.originalPrice.toLocaleString()} دينار عراقي
                                                 </span>
                                                 <span style={{ color: 'red', fontWeight: 'bold', fontSize: '1.2em' }}>
-                                                    {product.price.toLocaleString()} د.ع
+                                                    {product.price.toLocaleString()} دينار عراقي
                                                 </span>
                                             </>
                                         ) : (
                                             <span style={{ color: 'red', fontWeight: 'bold' }}>
-                                                {product.price.toLocaleString()} د.ع
+                                                {product.price.toLocaleString()} دينار عراقي
                                             </span>
                                         )}
                                     </div>

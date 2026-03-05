@@ -48,9 +48,9 @@ export default async function OffersPage() {
                                 <h3 className="product-title">{item.name}</h3>
                                 {/* السعر بعد الخصم والسعر الأصلي */}
                                 <div className="product-price">
-                                    {item.price.toLocaleString()} د.ع
+                                    {item.price.toLocaleString()} دينار عراقي
                                     {item.originalPrice && (
-                                        <span className="original-price">{item.originalPrice.toLocaleString()} د.ع</span>
+                                        <span className="original-price">{item.originalPrice.toLocaleString()} دينار عراقي</span>
                                     )}
                                 </div>
                             </div>

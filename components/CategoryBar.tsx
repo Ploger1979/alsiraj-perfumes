@@ -11,11 +11,12 @@ export default function CategoryBar() {
     // قائمة التصنيفات: الاسم والرابط
     const categories = [
         { name: "الكل", path: "/products" },
-        { name: "Eau de Toilette", path: "/products/perfumes/eau-de-toilette" },
-        { name: "فرنسي", path: "/products/perfumes/french" },
-        { name: "زيوت", path: "/products/perfumes/oils" },
+        { name: "ماركات عالمية", path: "/products/perfumes/french" },
+        { name: "تيستيرات", path: "/products/perfumes/eau-de-toilette" },
         { name: "رجالي", path: "/products/perfumes/men" },
         { name: "نسائي", path: "/products/perfumes/women" },
+        { name: "يونيسكس", path: "/products/perfumes/unisex" },
+        { name: "زيوت عطرية", path: "/products/perfumes/oils" },
     ];
 
     return (
