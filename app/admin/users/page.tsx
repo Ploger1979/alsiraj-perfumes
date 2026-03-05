@@ -193,7 +193,7 @@ export default function UsersManagement() {
                                             تاريخ الإضافة: {new Date(user.createdAt).toLocaleDateString('ar-EG')}
                                         </div>
                                         <div style={{ fontSize: '0.8rem', color: user.role === 'superadmin' ? 'var(--color-gold)' : '#aaa', marginTop: '4px' }}>
-                                            {user.role === 'superadmin' ? 'مدير عام' : 'مشرف'}
+                                            {user.role === 'superadmin' ? 'Super Admin' : 'Admin'}
                                         </div>
                                     </div>
 

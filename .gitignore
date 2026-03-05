@@ -48,3 +48,7 @@ next-env.d.ts
 !package.json
 !package-lock.json
 !tsconfig.json
+
+# Developer Reference Files (محلية فقط - لا ترفع)
+PROJECT_EXPLAINED_AR.md
+
