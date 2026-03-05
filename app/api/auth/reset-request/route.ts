@@ -18,17 +18,23 @@ export async function POST(request: Request) {
         // Specific Admin Recovery Logic
         let targetUser = null;
 
-        // 1. Check by email directly
+        // 1. ابحث بالإيميل أولاً
         targetUser = await User.findOne({ email });
 
-        // 2. Fallback: Check if it's the main admin email trying to recover 'admin1979'
+        // 2. لو ما لقيناهوش بالإيميل، ابحث بالـ username (لأن بعض المستخدمين بيستخدموا إيميلهم كـ username)
+        if (!targetUser) {
+            targetUser = await User.findOne({ username: email });
+        }
+
+        // 3. استرداد خاص لـ admin1979 عبر إيميل المطور
         if (!targetUser && email === 'aymanploger@gmail.com') {
             targetUser = await User.findOne({ username: 'admin1979' });
         }
 
         if (!targetUser) {
-            return NextResponse.json({ error: `البريد الإلكتروني غير مسجل (DB Check). إيميل: ${email}` }, { status: 404 });
+            return NextResponse.json({ error: `البريد الإلكتروني غير مسجل. تأكد من الإيميل الصحيح.` }, { status: 404 });
         }
+
 
         // Generate a reset token
         const resetToken = Math.random().toString(36).substring(2, 15);
