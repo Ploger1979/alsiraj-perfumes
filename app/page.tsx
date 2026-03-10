@@ -70,7 +70,10 @@ export default async function Hero() {
                 </div>
                 <div className="product-content">
                   <div>
-                    <h3 className="product-title">{product.name}</h3>
+                    <h3 className="product-title">
+                      {product.name}
+                      {product.nameAr && <span style={{ display: 'block', fontSize: '0.85em', color: '#aaa', marginTop: '4px' }}>{product.nameAr}</span>}
+                    </h3>
                     <div className="product-price" style={{ marginTop: '0.5rem' }}>
                       {formatCurrency(product.price)}
                       {(product.originalPrice || 0) > 0 && (

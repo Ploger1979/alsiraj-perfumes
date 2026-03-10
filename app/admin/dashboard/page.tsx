@@ -823,7 +823,10 @@ export default function AdminDashboard() {
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>
                                                 <img src={product.image} alt={product.name} width={50} height={50} style={{ objectFit: 'contain' }} />
                                             </td>
-                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.name}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                                                {product.name}
+                                                {product.nameAr && <div style={{ fontSize: '0.8em', color: '#666' }}>{product.nameAr}</div>}
+                                            </td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.price}</td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.size || '100ml'}</td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{product.category}</td>

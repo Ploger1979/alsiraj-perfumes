@@ -7,6 +7,7 @@ export interface ProductSize {
 export interface Product {
     id: number;
     name: string;
+    nameAr?: string;
     description?: string;
     price: number;
     originalPrice?: number;

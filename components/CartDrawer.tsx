@@ -44,7 +44,10 @@ export default function CartDrawer() {
                             <div key={item.id} className={styles.item}>
                                 <img src={item.image} alt={item.name} className={styles.itemImage} />
                                 <div className={styles.itemDetails}>
-                                    <div className={styles.itemName}>{item.name}</div>
+                                    <div className={styles.itemName}>
+                                        {item.name}
+                                        {item.nameAr && <div style={{ fontSize: '0.85em', color: '#aaa', marginTop: '2px' }}>{item.nameAr}</div>}
+                                    </div>
                                     <div className={styles.itemPrice}>{formatCurrency(item.price)}</div>
                                     <div className={styles.quantityControls}>
                                         <button

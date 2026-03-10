@@ -48,7 +48,10 @@ export default async function ProductsPage() {
                         </div>
                         <div className="product-content">
                             <div>
-                                <h3 className="product-title">{item.name}</h3>
+                                <h3 className="product-title">
+                                    {item.name}
+                                    {item.nameAr && <span style={{ display: 'block', fontSize: '0.85em', color: '#aaa', marginTop: '4px' }}>{item.nameAr}</span>}
+                                </h3>
                                 <div className="product-price">
                                     {item.price.toLocaleString()} دينار عراقي {/* السعر الحالي */}
                                     {(item.originalPrice || 0) > 0 && (

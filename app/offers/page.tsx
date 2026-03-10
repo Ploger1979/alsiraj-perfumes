@@ -72,7 +72,10 @@ export default async function OffersPage() {
                                     </Link>
                                 </div>
                                 <div className="product-info">
-                                    <h3 className="product-title">{product.name}</h3>
+                                    <h3 className="product-title">
+                                        {product.name}
+                                        {product.nameAr && <span style={{ display: 'block', fontSize: '0.85em', color: '#aaa', marginTop: '4px' }}>{product.nameAr}</span>}
+                                    </h3>
                                     <p className="product-category" style={{ color: '#888', marginBottom: '0.5rem' }}>{product.category}</p>
 
                                     <div className="product-price" style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'center' }}>

@@ -142,7 +142,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 {/* Details Section */}
                 <div className={styles.detailsSection}>
                     <div className={styles.brand}>السراج للعطور</div>
-                    <h1 className={styles.title}>{product.name}</h1>
+                    <h1 className={styles.title}>
+                        {product.name}
+                        {product.nameAr && <span style={{ display: 'block', fontSize: '0.6em', color: '#888', marginTop: '8px' }}>{product.nameAr}</span>}
+                    </h1>
                     <div className={styles.concentration}>
                         {product.concentration || 'Eau de Parfum'} | {product.gender || 'للجنسين'}
                     </div>
