@@ -12,7 +12,7 @@ export default function CategoryBar() {
     const categories = [
         { name: "الكل", path: "/products" },
         { name: "ماركات عالمية", path: "/products/perfumes/french" },
-        { name: "تيستيرات", path: "/products/perfumes/eau-de-toilette" },
+        { name: "تيسترات", path: "/products/perfumes/eau-de-toilette" },
         { name: "رجالي", path: "/products/perfumes/men" },
         { name: "نسائي", path: "/products/perfumes/women" },
         { name: "يونيسكس", path: "/products/perfumes/unisex" },

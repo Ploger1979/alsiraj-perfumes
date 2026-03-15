@@ -646,7 +646,7 @@ export default function AdminDashboard() {
                                     <option value="unisex">للجنسين (Unisex)</option>
                                     <option value="french">ماركات عالمية</option>
                                     <option value="oils">زيوت (Oils)</option>
-                                    <option value="testers">تيستيرات (Tester)</option>
+                                    <option value="testers">تيسترات (Tester)</option>
                                 </select>
                             </div>
 
@@ -678,7 +678,7 @@ export default function AdminDashboard() {
                                     <option value="Eau de Parfum">Eau de Parfum</option>
                                     <option value="Ultra">Ultra</option>
                                     <option value="Oil">Oil (زيت)</option>
-                                    <option value="Tester">تيستيرات (Tester)</option>
+                                    <option value="Tester">تيسترات (Tester)</option>
                                 </select>
                             </div>
                         </div>

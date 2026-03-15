@@ -37,7 +37,7 @@ export default function Footer() {
                             <h4>المجموعات</h4>
                             <ul>
                                 <li><Link href="/products/perfumes/french">ماركات عالمية</Link></li>
-                                <li><Link href="/products/perfumes/eau-de-toilette">تيستيرات (Testers)</Link></li>
+                                <li><Link href="/products/perfumes/eau-de-toilette">تيسترات (Testers)</Link></li>
                                 <li><Link href="/products/perfumes/men">مجموعة الرجال</Link></li>
                                 <li><Link href="/products/perfumes/women">مجموعة النساء</Link></li>
                                 <li><Link href="/products/perfumes/unisex">مجموعة اليونيسكس</Link></li>

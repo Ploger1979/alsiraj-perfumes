@@ -17,7 +17,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             category === "men" ? "مجموعة الرجال" :
                 category === "women" ? "مجموعة النساء" :
                     category === "unisex" ? "يونيسكس" :
-                        category === "eau-de-toilette" ? "تيستيرات" : category;
+                        category === "eau-de-toilette" ? "تيسترات" : category;
 
     await dbConnect();
 
@@ -33,37 +33,46 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     const safeProducts = JSON.parse(JSON.stringify(allProducts));
 
     // ===================================================
-    // 🔍 منطق الفلترة الذكي حسب التصنيف
+    // 🔍 منطق الفلترة الذكي حسب التصنيف (بشكل حصري)
     // ===================================================
+    const isTester = (p: any) =>
+        p.concentration?.toLowerCase().includes("tester") ||
+        p.concentration === "تيستر" ||
+        p.category?.toLowerCase() === "tester" ||
+        p.category === "تيستر" ||
+        p.category === "eau-de-toilette";
+
+    const isOil = (p: any) =>
+        p.category === "oils" ||
+        p.concentration?.toLowerCase() === "oil" ||
+        p.category === "زيوت" ||
+        p.concentration === "زيت";
+
     const categoryProducts = (() => {
         switch (category) {
-            // تيستيرات = Eau de Toilette أو Tester (كلاهما نفس التصنيف)
+            // تيسترات (حصرياً للتيسترات)
             case "eau-de-toilette":
-                return safeProducts.filter((p: any) =>
-                    p.concentration === "Eau de Toilette" || p.concentration === "Tester"
-                );
-            // ماركات عالمية = كل المنتجات
+                return safeProducts.filter((p: any) => isTester(p));
+            // ماركات عالمية = كل المنتجات (أو يمكن لاحقاً فلترتها إذا لزم الأمر)
             case "french":
                 return safeProducts;
-            // زيوت
+            // زيوت عطرية (حصرياً)
             case "oils":
-                return safeProducts.filter((p: any) =>
-                    p.category === "oils" || p.concentration === "Oil"
-                );
-            // رجالي
+                return safeProducts.filter((p: any) => isOil(p));
+            // رجالي (حصراً العطور الرجالية المستبعد منها التيسترات والزيوت)
             case "men":
                 return safeProducts.filter((p: any) =>
-                    p.gender === "رجالي" || p.gender === "men"
+                    !isTester(p) && !isOil(p) && (p.gender === "رجالي" || p.gender?.toLowerCase() === "men")
                 );
-            // نسائي
+            // نسائي (حصراً العطور النسائية المستبعد منها التيسترات والزيوت)
             case "women":
                 return safeProducts.filter((p: any) =>
-                    p.gender === "نسائي" || p.gender === "women"
+                    !isTester(p) && !isOil(p) && (p.gender === "نسائي" || p.gender?.toLowerCase() === "women")
                 );
-            // يونيسكس
+            // يونيسكس (حصراً عطور الجنسين المستبعد منها التيسترات والزيوت)
             case "unisex":
                 return safeProducts.filter((p: any) =>
-                    p.gender === "للجنسين" || p.gender === "unisex" || p.gender === "Unisex"
+                    !isTester(p) && !isOil(p) && (p.gender === "للجنسين" || p.gender?.toLowerCase() === "unisex")
                 );
             default:
                 return safeProducts.filter((p: any) => p.category === category);
