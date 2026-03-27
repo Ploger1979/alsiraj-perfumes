@@ -12,7 +12,7 @@ export default function CartDrawer() {
     const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, totalPrice } = useCart();
 
     const DELIVERY_COST = 5000; // تكلفة التوصيل لجميع المحافظات
-    const FREE_SHIPPING_THRESHOLD = 100000; // الشحن مجاني للطلبات فوق 100,000 دينار
+    const FREE_SHIPPING_THRESHOLD = 50000; // الشحن مجاني للطلبات فوق 50,000 دينار
     const isFreeShipping = totalPrice >= FREE_SHIPPING_THRESHOLD;
     const deliveryCost = isFreeShipping ? 0 : DELIVERY_COST;
     const finalTotal = totalPrice + deliveryCost;

@@ -35,7 +35,37 @@ export default async function ProductsPage() {
             {/* شبكة المنتجات (Grid): تعرض المنتجات في صفوف وأعمدة متجاوبة */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
                 {products.map((item: any) => (
-                    <div key={item.id} className="product-card">
+                    <div key={item.id} className="product-card" style={{ position: 'relative' }}>
+                        {item.isOffer && (item.originalPrice || 0) > 0 && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                zIndex: 2,
+                                pointerEvents: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    width: '40px',
+                                    height: '40px',
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                    zIndex: -1 // to go behind the image
+                                }}></div>
+                                <img 
+                                    src="/new-offer-badge.png" 
+                                    alt="عرض خاص" 
+                                    style={{ 
+                                        width: '55px', 
+                                        height: 'auto',
+                                        position: 'relative'
+                                    }} 
+                                />
+                            </div>
+                        )}
                         <div className="product-image-container">
                             <Link href={`/products/${item.id}`}>
                                 <img

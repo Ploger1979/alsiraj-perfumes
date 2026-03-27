@@ -30,8 +30,18 @@ export default async function OffersPage() {
 
             <main className="container" style={{ paddingTop: '100px', paddingBottom: '50px', minHeight: '80vh' }}>
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--color-gold)' }}>العروض الخاصة 🔥</h1>
-                    <p style={{ color: 'white', fontSize: '1.2rem' }}>اغتنم الفرصة وتسوق عطورك المفضلة بأفضل الأسعار</p>
+                    <h1 style={{ 
+                        fontSize: '3rem', 
+                        marginBottom: '1rem', 
+                        background: 'linear-gradient(135deg, #ff4e50 0%, #f9d423 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        display: 'inline-block',
+                        fontWeight: 'bold',
+                        paddingBottom: '5px',
+                        textShadow: '0px 4px 15px rgba(255, 78, 80, 0.4)'
+                    }}>العروض الخاصة %</h1>
+                    <p style={{ color: 'var(--foreground)', fontSize: '1.2rem', opacity: 0.9 }}>اغتنم الفرصة وتسوق عطورك المفضلة بأفضل الأسعار</p>
                 </div>
 
                 {offerProducts.length === 0 ? (
@@ -42,23 +52,41 @@ export default async function OffersPage() {
                         </Link>
                     </div>
                 ) : (
-                    <div className="products-grid">
+                    <div className="products-grid" style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, 1fr)',
+                        gap: '1.5rem'
+                    }}>
                         {offerProducts.map((product: any) => (
                             <div key={product.id} className="product-card" style={{ position: 'relative' }}>
-                                {/* شارة الخصم */}
+                                {/* شارة الخصم الفخمة (صورة الشريطة) */}
                                 <div style={{
                                     position: 'absolute',
-                                    top: '10px',
-                                    right: '10px',
-                                    background: 'red',
-                                    color: 'white',
-                                    padding: '5px 10px',
-                                    borderRadius: '4px',
-                                    fontWeight: 'bold',
+                                    top: '8px',
+                                    right: '8px',
                                     zIndex: 2,
-                                    fontSize: '0.9rem'
+                                    pointerEvents: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
                                 }}>
-                                    عرض خاص
+                                    <div style={{
+                                        position: 'absolute',
+                                        width: '40px',
+                                        height: '40px',
+                                        backgroundColor: 'white',
+                                        borderRadius: '50%',
+                                        zIndex: -1 // to go behind the image
+                                    }}></div>
+                                    <img 
+                                        src="/new-offer-badge.png" 
+                                        alt="عرض خاص" 
+                                        style={{ 
+                                            width: '55px', 
+                                            height: 'auto',
+                                            position: 'relative'
+                                        }} 
+                                    />
                                 </div>
 
                                 <div className="product-image-container">

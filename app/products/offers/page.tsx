@@ -29,13 +29,40 @@ export default async function OffersPage() {
             <h1 style={{ fontSize: "3rem", marginBottom: "2rem", textAlign: "center" }}>عروض خاصة</h1>
             <p style={{ textAlign: "center", marginBottom: "4rem", color: "var(--color-text-muted)" }}>خصومات حصرية على مجموعتنا المميزة.</p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "3rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
                 {offers.map((item: any) => (
-                    <div key={item.id} className="product-card">
-                        {/* شارة الخصم (تحسب النسبة المئوية تلقائياً) */}
-                        <div className="product-badge">
-                            {item.originalPrice && item.price ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0}%
-                        </div>
+                    <div key={item.id} className="product-card" style={{ position: 'relative' }}>
+                        {/* شارة الخصم الفخمة */}
+                        {item.isOffer && (item.originalPrice || 0) > 0 && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                zIndex: 2,
+                                pointerEvents: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    width: '40px',
+                                    height: '40px',
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                    zIndex: -1 // to go behind the image
+                                }}></div>
+                                <img 
+                                    src="/new-offer-badge.png" 
+                                    alt="عرض خاص" 
+                                    style={{ 
+                                        width: '55px', 
+                                        height: 'auto',
+                                        position: 'relative'
+                                    }} 
+                                />
+                            </div>
+                        )}
                         <div className="product-image-container">
                             <img
                                 src={item.image}

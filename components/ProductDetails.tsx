@@ -55,7 +55,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const currentPrice = selectedSize ? selectedSize.price : product.price;
 
     const DELIVERY_COST = 5000;
-    const FREE_SHIPPING_THRESHOLD = 100000; // مجاني فوق 100,000 دينار
+    const FREE_SHIPPING_THRESHOLD = 50000; // مجاني فوق 50,000 دينار
     const isFreeShipping = currentPrice >= FREE_SHIPPING_THRESHOLD;
 
     return (
@@ -69,6 +69,37 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                       - الزر الأيمن والأيسر يقومان بتغيير `selectedImage` من المصفوفة.
                     */}
                     <div className={styles.mainImageContainer} style={{ position: 'relative' }}>
+                        {/* شارة الخصم الفخمة في صفحة التفاصيل */}
+                        {product.isOffer && (product.originalPrice || 0) > 0 && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                zIndex: 12,
+                                pointerEvents: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    width: '54px',
+                                    height: '54px',
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                    zIndex: -1 // to go behind the image
+                                }}></div>
+                                <img 
+                                    src="/new-offer-badge.png" 
+                                    alt="عرض خاص" 
+                                    style={{ 
+                                        width: '75px', 
+                                        height: 'auto',
+                                        position: 'relative'
+                                    }} 
+                                />
+                            </div>
+                        )}
                         {product.images && product.images.length > 1 && (
                             <button
                                 onClick={() => {

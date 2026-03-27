@@ -62,7 +62,37 @@ export default async function Hero() {
           </div>
           <div className={styles.grid}>
             {safeProducts.map((product: any) => (
-              <div key={product.id} className="product-card">
+              <div key={product.id} className="product-card" style={{ position: 'relative' }}>
+                {product.isOffer && (product.originalPrice || 0) > 0 && (
+                  <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      zIndex: 2,
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                  }}>
+                      <div style={{
+                          position: 'absolute',
+                          width: '40px',
+                          height: '40px',
+                          backgroundColor: 'white',
+                          borderRadius: '50%',
+                          zIndex: -1 // to go behind the image
+                      }}></div>
+                      <img 
+                          src="/new-offer-badge.png" 
+                          alt="عرض خاص" 
+                          style={{ 
+                              width: '55px', 
+                              height: 'auto',
+                              position: 'relative'
+                          }} 
+                      />
+                  </div>
+                )}
                 <div className="product-image-container">
                   <Link href={`/products/${product.id}`}>
                     <img src={product.image} alt={product.name} className="product-image" style={{ cursor: "pointer" }} />
