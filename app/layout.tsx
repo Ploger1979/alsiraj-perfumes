@@ -10,6 +10,7 @@ import CartDrawer from "@/components/CartDrawer";
 import SearchModal from "@/components/SearchModal";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import JsonLd from "@/components/JsonLd";
+import AIAssistant from "@/components/AIAssistant";
 
 // تعريف الخطوط المستخدمة في الموقع (Google Fonts)
 const playfair = Playfair_Display({
@@ -47,8 +48,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-gold.png",
     shortcut: "/favicon-gold.png",
-    apple: "/favicon-gold.png",
+    apple: "/logo-Circle.png",   // ← أيقونة iPhone الاحترافية
   },
+
+  manifest: "/manifest.json",
 
   openGraph: {
     title: "السراج للعطور | أفضل العطور العالميه والشرقية",
@@ -103,6 +106,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <head>
+        {/* Apple PWA Meta Tags - Controls icon label on iPhone */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="السراج للعطور" />
+        <meta name="theme-color" content="#D4AF37" />
+      </head>
       <body className={`${playfair.variable} ${lato.variable} antialiased`}>
         <JsonLd />
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
@@ -115,8 +125,19 @@ export default function RootLayout({
             <CartDrawer /> {/* القائمة الجانبية للسلة (مخفية افتراضياً) */}
             <SearchModal /> {/* نافذة البحث (مخفية افتراضياً) */}
             <ScrollToTopButton /> {/* زر الصعود للأعلى */}
+            <AIAssistant /> {/* المساعد العائم */}
           </CartProvider>
         </ThemeProvider>
+        {/* تسجيل Service Worker للـ PWA */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js')
+                .then(function(reg) { console.log('SW registered'); })
+                .catch(function(err) { console.log('SW error:', err); });
+            });
+          }
+        `}} />
       </body>
     </html>
   );

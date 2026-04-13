@@ -1,0 +1,36 @@
+{
+  "name": "السراج للعطور",
+  "short_name": "السراج للعطور",
+  "description": "أفضل العطور العالمية والشرقية في أوروبا",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1221",
+  "theme_color": "#D4AF37",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "scope": "/",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "/logo-Circle.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-Circle.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/alsiraj-cover.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
