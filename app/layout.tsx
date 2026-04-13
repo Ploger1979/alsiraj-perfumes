@@ -48,10 +48,8 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-gold.png",
     shortcut: "/favicon-gold.png",
-    apple: "/logo-Circle.png",   // ← أيقونة iPhone الاحترافية
+    apple: "/logo-Circle.png",
   },
-
-  manifest: "/manifest.json",
 
   openGraph: {
     title: "السراج للعطور | أفضل العطور العالميه والشرقية",
