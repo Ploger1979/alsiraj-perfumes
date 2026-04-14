@@ -10,7 +10,6 @@ import CartDrawer from "@/components/CartDrawer";
 import SearchModal from "@/components/SearchModal";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import JsonLd from "@/components/JsonLd";
-import AIAssistant from "@/components/AIAssistant";
 
 // تعريف الخطوط المستخدمة في الموقع (Google Fonts)
 const playfair = Playfair_Display({
@@ -48,7 +47,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-gold.png",
     shortcut: "/favicon-gold.png",
-    apple: "/logo-Circle.png",
+    apple: "/logo-Circle.png", // ← أيقونة iPhone الاحترافية
   },
 
   openGraph: {
@@ -59,7 +58,7 @@ export const metadata: Metadata = {
     siteName: "السراج للعطور | Alsiraj Perfumes",
     images: [
       {
-        url: ogImage, // ✅ رابط كامل
+        url: ogImage,
         width: 1200,
         height: 630,
         alt: "السراج للعطور - فخامة العطـور",
@@ -74,7 +73,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "السراج للعطور | Alsiraj Perfumes",
     description: "اكتشف فخامة العطور العالميه والشرقية مع السراج.",
-    images: [ogImage], // ✅ رابط كامل
+    images: [ogImage],
   },
 
   robots: {
@@ -96,7 +95,6 @@ export const metadata: Metadata = {
 
 
 // المخطط الرئيسي (Layout) الذي يحيط بكل صفحات الموقع
-// هنا نضع الأشياء الثابتة مثل الـ Navbar والـ Footer ومزودي الخدمات (Providers)
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -105,7 +103,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Apple PWA Meta Tags - Controls icon label on iPhone */}
+        {/* Apple PWA Meta Tags */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="السراج للعطور" />
@@ -114,25 +112,21 @@ export default function RootLayout({
       <body className={`${playfair.variable} ${lato.variable} antialiased`}>
         <JsonLd />
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
-          {/* مزود السلة يغلف التطبيق ليمكن الوصول للسلة من أي مكان */}
           <CartProvider>
-            <Navbar /> {/* الشريط العلوي */}
-            <CategoryBar /> {/* شريط التصنيفات */}
-            <main style={{ minHeight: "100vh" }}>{children}</main> {/* محتوى الصفحة المتغير */}
-            <Footer /> {/* تذييل الصفحة */}
-            <CartDrawer /> {/* القائمة الجانبية للسلة (مخفية افتراضياً) */}
-            <SearchModal /> {/* نافذة البحث (مخفية افتراضياً) */}
-            <ScrollToTopButton /> {/* زر الصعود للأعلى */}
-            <AIAssistant /> {/* المساعد العائم */}
+            <Navbar />
+            <CategoryBar />
+            <main style={{ minHeight: "100vh" }}>{children}</main>
+            <Footer />
+            <CartDrawer />
+            <SearchModal />
+            <ScrollToTopButton />
           </CartProvider>
         </ThemeProvider>
-        {/* تسجيل Service Worker للـ PWA */}
+        {/* Service Worker للـ PWA */}
         <script dangerouslySetInnerHTML={{ __html: `
           if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-              navigator.serviceWorker.register('/sw.js')
-                .then(function(reg) { console.log('SW registered'); })
-                .catch(function(err) { console.log('SW error:', err); });
+              navigator.serviceWorker.register('/sw.js');
             });
           }
         `}} />
